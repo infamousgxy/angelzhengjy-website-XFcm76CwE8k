@@ -34,11 +34,15 @@ npm install -g wrangler
 # 登录 Cloudflare
 wrangler login
 
-# 部署
+# 部署（确保先运行 pnpm build）
+pnpm build
 wrangler pages deploy out --project-name=angelzhengjy-website
+
+# 或者使用配置文件部署
+wrangler deploy
 ```
 
-**配置文件**: `wrangler.toml`
+**配置文件**: `wrangler.toml` - 使用 `[assets]` 配置静态资源目录
 
 ### 3. 其他静态托管平台
 
@@ -69,6 +73,7 @@ pnpm build
 2. **API 路由**: 静态导出不支持 API 路由
 3. **动态路由**: 需要使用 `generateStaticParams` 预生成所有路径
 4. **Headers**: 静态导出不支持自定义 headers
+5. **Wrangler 配置**: 使用 `[assets]` 而不是 `pages_build_output_dir`
 
 ## 🔧 故障排除
 
@@ -77,6 +82,7 @@ pnpm build
 1. 确保使用正确的 Node.js 版本（推荐 18.x 或 22.x）
 2. 清理缓存：`rm -rf .next out node_modules && pnpm install`
 3. 检查是否有使用了不兼容静态导出的功能
+4. 确保 `out/` 目录在部署前已生成：运行 `pnpm build`
 
 ## 🌐 当前部署状态
 
