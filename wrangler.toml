@@ -1,0 +1,9 @@
+name = "angelzhengjy-website"
+compatibility_date = "2025-05-26"
+
+# Cloudflare Pages 配置
+[env.production]
+compatibility_date = "2025-05-26"
+
+# 指定静态资源目录
+pages_build_output_dir = "./out" 

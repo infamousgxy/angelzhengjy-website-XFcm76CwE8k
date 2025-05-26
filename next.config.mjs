@@ -3,6 +3,10 @@ const nextConfig = {
   // 配置允许的开发源
   allowedDevOrigins: ['192.168.66.249'],
   
+  // 启用静态导出（用于Cloudflare Pages）
+  output: 'export',
+  trailingSlash: true,
+  
   experimental: {
     turbo: {
       rules: {
@@ -15,10 +19,20 @@ const nextConfig = {
   },
   
   images: {
-    domains: ['images.unsplash.com', 'placeholder.svg'],
+    // 使用 remotePatterns 替代已弃用的 domains
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'placeholder.svg',
+      },
+    ],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    unoptimized: false,
+    unoptimized: true, // 静态导出需要禁用图片优化
   },
   
   eslint: {
@@ -27,29 +41,6 @@ const nextConfig = {
   
   typescript: {
     ignoreBuildErrors: true,
-  },
-  
-  // 配置 CORS 头部
-  async headers() {
-    return [
-      {
-        source: '/_next/:path*',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: '*',
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, OPTIONS',
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization',
-          },
-        ],
-      },
-    ]
   },
 }
 
