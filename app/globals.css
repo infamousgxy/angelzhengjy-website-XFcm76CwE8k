@@ -1,0 +1,2231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: "Times New Roman", "Georgia", "Palatino", serif;
+  }
+}
+
+@layer utilities {
+  /* Baroque Font Classes - Using web-safe fonts */
+  .baroque-title-font {
+    font-family: "Times New Roman", "Georgia", "Book Antiqua", serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-variant: small-caps;
+  }
+
+  .baroque-script-font {
+    font-family: "Brush Script MT", "Lucida Handwriting", "Apple Chancery", cursive;
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  .baroque-text-font {
+    font-family: "Georgia", "Times New Roman", "Palatino", serif;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .baroque-button-font {
+    font-family: "Times New Roman", "Georgia", "Book Antiqua", serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Background Size for Animations */
+  .bg-size-200 {
+    background-size: 200% 200%;
+  }
+
+  /* Enhanced Loading Animations */
+  .animate-loading-spin {
+    animation: loadingSpin 2s linear infinite;
+  }
+
+  .animate-loading-spin-reverse {
+    animation: loadingSpin 2s linear infinite reverse;
+  }
+
+  .animate-loading-pulse {
+    animation: loadingPulse 1.5s ease-in-out infinite;
+  }
+
+  .animate-loading-glow {
+    animation: loadingGlow 2s ease-in-out infinite;
+  }
+
+  .animate-loading-ornate {
+    animation: loadingOrnate 3s ease-in-out infinite;
+  }
+
+  /* Page Entrance Animation */
+  .animate-page-entrance {
+    animation: pageEntrance 1.5s ease-out;
+  }
+
+  /* Enhanced Click Effect Animations */
+  .animate-click-ripple {
+    animation: clickRipple 2s ease-out;
+  }
+
+  .animate-click-pulse {
+    animation: clickPulse 2s ease-out;
+  }
+
+  .animate-click-sparkle {
+    animation: clickSparkle 2s ease-out;
+  }
+
+  .animate-click-ornate {
+    animation: clickOrnate 2s ease-out;
+  }
+
+  /* Enhanced Cursor Animations */
+  .animate-cursor-magic {
+    animation: cursorMagic 1s ease-in-out infinite;
+  }
+
+  .animate-cursor-orbit {
+    animation: cursorOrbit 2s linear infinite;
+  }
+
+  /* Enhanced Particle Animations */
+  .animate-magical-float-particle {
+    animation: magicalFloatParticle 6s ease-in-out infinite;
+  }
+
+  /* Enhanced Ornate Animations */
+  .animate-large-ornate-float {
+    animation: largeOrnateFloat 8s ease-in-out infinite;
+  }
+
+  .animate-large-ornate-float-delayed {
+    animation: largeOrnateFloat 8s ease-in-out infinite 4s;
+  }
+
+  .animate-large-ornate-spin {
+    animation: largeOrnateSpin 12s linear infinite;
+  }
+
+  .animate-ornate-pulse {
+    animation: ornatePulse 3s ease-in-out infinite;
+  }
+
+  .animate-ornate-pulse-delayed {
+    animation: ornatePulse 3s ease-in-out infinite 1.5s;
+  }
+
+  .animate-ornate-float {
+    animation: ornateFloat 5s ease-in-out infinite;
+  }
+
+  /* Enhanced Navigation Animations */
+  .animate-nav-entrance {
+    animation: navEntrance 1s ease-out 0.5s both;
+  }
+
+  .animate-nav-item {
+    animation: navItemEntrance 0.8s ease-out both;
+  }
+
+  .animate-nav-icon-spin {
+    animation: navIconSpin 0.5s ease-in-out;
+  }
+
+  .animate-nav-text-wave {
+    animation: navTextWave 0.5s ease-in-out;
+  }
+
+  .animate-nav-ornate {
+    animation: navOrnate 4s ease-in-out infinite;
+  }
+
+  .animate-nav-ornate-delayed {
+    animation: navOrnate 4s ease-in-out infinite 2s;
+  }
+
+  .animate-nav-icon-ornate {
+    animation: navIconOrnate 3s ease-in-out infinite;
+  }
+
+  /* Enhanced Hero Section Animations */
+  .animate-hero-entrance {
+    animation: heroEntrance 2s ease-out 1s both;
+  }
+
+  .animate-hero-orb-dance {
+    animation: heroOrbDance 12s ease-in-out infinite;
+  }
+
+  .animate-hero-orb-dance-delayed {
+    animation: heroOrbDance 12s ease-in-out infinite 4s;
+  }
+
+  .animate-hero-orb-pulse {
+    animation: heroOrbPulse 8s ease-in-out infinite;
+  }
+
+  .animate-hero-border-symphony {
+    animation: heroBorderSymphony 10s linear infinite;
+  }
+
+  .animate-hero-border-symphony-reverse {
+    animation: heroBorderSymphony 10s linear infinite reverse;
+  }
+
+  .animate-hero-inner-glow {
+    animation: heroInnerGlow 4s ease-in-out infinite;
+  }
+
+  .animate-hero-content-entrance {
+    animation: heroContentEntrance 1.5s ease-out 1.5s both;
+  }
+
+  .animate-hero-corner-ornate {
+    animation: heroCornerOrnate 6s ease-in-out infinite;
+  }
+
+  .animate-hero-corner-ornate-delayed {
+    animation: heroCornerOrnate 6s ease-in-out infinite 3s;
+  }
+
+  /* Enhanced Title Animations */
+  .animate-title-entrance {
+    animation: titleEntrance 1.2s ease-out 2s both;
+  }
+
+  .animate-title-symphony {
+    animation: titleSymphony 8s ease-in-out infinite;
+  }
+
+  .animate-title-crown {
+    animation: titleCrown 5s ease-in-out infinite;
+  }
+
+  .animate-title-ornate {
+    animation: titleOrnate 4s ease-in-out infinite;
+  }
+
+  .animate-title-ornate-delayed {
+    animation: titleOrnate 4s ease-in-out infinite 2s;
+  }
+
+  /* Enhanced Subtitle Animations */
+  .animate-subtitle-entrance {
+    animation: subtitleEntrance 1.2s ease-out 2.5s both;
+  }
+
+  .animate-subtitle-ornate {
+    animation: subtitleOrnate 6s ease-in-out infinite;
+  }
+
+  .animate-subtitle-ornate-delayed {
+    animation: subtitleOrnate 6s ease-in-out infinite 3s;
+  }
+
+  .animate-subtitle-ornate-small {
+    animation: subtitleOrnateSmall 4s ease-in-out infinite;
+  }
+
+  .animate-subtitle-ornate-small-delayed {
+    animation: subtitleOrnateSmall 4s ease-in-out infinite 2s;
+  }
+
+  .animate-subtitle-flow {
+    animation: subtitleFlow 6s ease-in-out infinite;
+  }
+
+  .animate-quote-ornate {
+    animation: quoteOrnate 4s ease-in-out infinite;
+  }
+
+  .animate-quote-ornate-delayed {
+    animation: quoteOrnate 4s ease-in-out infinite 2s;
+  }
+
+  /* Description and Icons */
+  .animate-description-entrance {
+    animation: descriptionEntrance 1.2s ease-out 3s both;
+  }
+
+  .animate-icons-entrance {
+    animation: iconsEntrance 1.2s ease-out 3.5s both;
+  }
+
+  .animate-hero-icon {
+    animation: heroIcon 3s ease-in-out infinite;
+  }
+
+  .animate-hero-icon-delayed {
+    animation: heroIcon 3s ease-in-out infinite 1.5s;
+  }
+
+  /* Section Animations */
+  .animate-section-entrance {
+    animation: sectionEntrance 1s ease-out;
+  }
+
+  .animate-section-ornament-grand {
+    animation: sectionOrnamentGrand 20s ease-in-out infinite;
+  }
+
+  .animate-section-ornament-grand-delayed {
+    animation: sectionOrnamentGrand 20s ease-in-out infinite 10s;
+  }
+
+  /* Enhanced Products Section */
+  .animate-products-header-entrance {
+    animation: productsHeaderEntrance 1.2s ease-out 0.5s both;
+  }
+
+  .animate-products-title-symphony {
+    animation: productsTitleSymphony 8s ease-in-out infinite;
+  }
+
+  .animate-products-title-ornate {
+    animation: productsTitleOrnate 4s ease-in-out infinite;
+  }
+
+  .animate-products-title-ornate-delayed {
+    animation: productsTitleOrnate 4s ease-in-out infinite 2s;
+  }
+
+  .animate-products-title-crown {
+    animation: productsTitleCrown 6s ease-in-out infinite;
+  }
+
+  .animate-products-subtitle {
+    animation: productsSubtitle 1s ease-out 1s both;
+  }
+
+  .animate-product-card-entrance {
+    animation: productCardEntrance 1s ease-out both;
+  }
+
+  .animate-product-click {
+    animation: productClick 0.6s ease-out;
+  }
+
+  .animate-product-inner-glow {
+    animation: productInnerGlow 3s ease-in-out infinite;
+  }
+
+  .animate-product-ornate {
+    animation: productOrnate 4s ease-in-out infinite;
+  }
+
+  .animate-product-sparkle {
+    animation: productSparkle 3s ease-in-out infinite;
+  }
+
+  .animate-product-sparkle-delayed {
+    animation: productSparkle 3s ease-in-out infinite 1.5s;
+  }
+
+  .animate-product-crown {
+    animation: productCrown 5s ease-in-out infinite;
+  }
+
+  .animate-product-title-wave {
+    animation: productTitleWave 3s ease-in-out infinite;
+  }
+
+  .animate-product-price-dance {
+    animation: productPriceDance 3s ease-in-out infinite;
+  }
+
+  .animate-product-button-symphony {
+    animation: productButtonSymphony 5s ease-in-out infinite;
+  }
+
+  .animate-button-heart {
+    animation: buttonHeart 2s ease-in-out infinite;
+  }
+
+  .animate-button-sparkle {
+    animation: buttonSparkle 3s ease-in-out infinite;
+  }
+
+  .animate-button-shimmer {
+    animation: buttonShimmer 3s ease-in-out infinite;
+  }
+
+  /* Enhanced Stories Section */
+  .animate-story-ornament-majestic {
+    animation: storyOrnamentMajestic 25s ease-in-out infinite;
+  }
+
+  .animate-story-ornament-dance {
+    animation: storyOrnamentDance 18s ease-in-out infinite;
+  }
+
+  .animate-story-ornament-float {
+    animation: storyOrnamentFloat 22s ease-in-out infinite;
+  }
+
+  .animate-stories-header-entrance {
+    animation: storiesHeaderEntrance 1.2s ease-out 0.5s both;
+  }
+
+  .animate-stories-title-symphony {
+    animation: storiesTitleSymphony 8s ease-in-out infinite;
+  }
+
+  .animate-stories-ornate {
+    animation: storiesOrnate 6s ease-in-out infinite;
+  }
+
+  .animate-stories-ornate-delayed {
+    animation: storiesOrnate 6s ease-in-out infinite 3s;
+  }
+
+  .animate-stories-ornate-small {
+    animation: storiesOrnateSmall 4s ease-in-out infinite;
+  }
+
+  .animate-stories-ornate-small-delayed {
+    animation: storiesOrnateSmall 4s ease-in-out infinite 2s;
+  }
+
+  .animate-stories-subtitle {
+    animation: storiesSubtitle 1s ease-out 1s both;
+  }
+
+  .animate-story-card-entrance {
+    animation: storyCardEntrance 1s ease-out both;
+  }
+
+  .animate-story-click {
+    animation: storyClick 0.8s ease-out;
+  }
+
+  .animate-story-icon {
+    animation: storyIcon 4s ease-in-out infinite;
+  }
+
+  .animate-story-aura {
+    animation: storyAura 3s ease-in-out infinite;
+  }
+
+  .animate-story-title-ornate {
+    animation: storyTitleOrnate 4s ease-in-out infinite;
+  }
+
+  .animate-story-decoration {
+    animation: storyDecoration 5s ease-in-out infinite;
+  }
+
+  .animate-stories-image-entrance {
+    animation: storiesImageEntrance 1.2s ease-out 1s both;
+  }
+
+  .animate-stories-image-aura {
+    animation: storiesImageAura 10s ease-in-out infinite;
+  }
+
+  .animate-stories-image-ornate {
+    animation: storiesImageOrnate 6s ease-in-out infinite;
+  }
+
+  .animate-stories-image-ornate-delayed {
+    animation: storiesImageOrnate 6s ease-in-out infinite 3s;
+  }
+
+  .animate-stories-image-sparkle {
+    animation: storiesImageSparkle 4s ease-in-out infinite;
+  }
+
+  .animate-stories-image-sparkle-delayed {
+    animation: storiesImageSparkle 4s ease-in-out infinite 2s;
+  }
+
+  /* Enhanced About Section */
+  .animate-about-portrait-entrance {
+    animation: aboutPortraitEntrance 1.2s ease-out 0.5s both;
+  }
+
+  .animate-about-portrait-aura {
+    animation: aboutPortraitAura 12s ease-in-out infinite;
+  }
+
+  .animate-about-portrait-ornate {
+    animation: aboutPortraitOrnate 8s ease-in-out infinite;
+  }
+
+  .animate-about-portrait-ornate-delayed {
+    animation: aboutPortraitOrnate 8s ease-in-out infinite 4s;
+  }
+
+  .animate-about-portrait-sparkle {
+    animation: aboutPortraitSparkle 5s ease-in-out infinite;
+  }
+
+  .animate-about-portrait-sparkle-delayed {
+    animation: aboutPortraitSparkle 5s ease-in-out infinite 2.5s;
+  }
+
+  .animate-about-content-entrance {
+    animation: aboutContentEntrance 1.2s ease-out 1s both;
+  }
+
+  .animate-about-title-symphony {
+    animation: aboutTitleSymphony 8s ease-in-out infinite;
+  }
+
+  .animate-about-title-crown {
+    animation: aboutTitleCrown 6s ease-in-out infinite;
+  }
+
+  .animate-about-title-heart {
+    animation: aboutTitleHeart 4s ease-in-out infinite;
+  }
+
+  .animate-about-content-ornate {
+    animation: aboutContentOrnate 7s ease-in-out infinite;
+  }
+
+  .animate-about-content-ornate-delayed {
+    animation: aboutContentOrnate 7s ease-in-out infinite 3.5s;
+  }
+
+  .animate-about-content-sparkle {
+    animation: aboutContentSparkle 5s ease-in-out infinite;
+  }
+
+  .animate-about-signature-ornate {
+    animation: aboutSignatureOrnate 3s ease-in-out infinite;
+  }
+
+  .animate-about-signature-ornate-delayed {
+    animation: aboutSignatureOrnate 3s ease-in-out infinite 1.5s;
+  }
+
+  .animate-about-signature-small {
+    animation: aboutSignatureSmall 4s ease-in-out infinite;
+  }
+
+  .animate-about-signature-small-delayed {
+    animation: aboutSignatureSmall 4s ease-in-out infinite 2s;
+  }
+
+  /* Enhanced Contact Section */
+  .animate-contact-ornament-grand {
+    animation: contactOrnamentGrand 30s ease-in-out infinite;
+  }
+
+  .animate-contact-ornament-grand-delayed {
+    animation: contactOrnamentGrand 30s ease-in-out infinite 15s;
+  }
+
+  .animate-contact-ornament-flutter {
+    animation: contactOrnamentFlutter 25s ease-in-out infinite;
+  }
+
+  .animate-contact-header-entrance {
+    animation: contactHeaderEntrance 1.2s ease-out 0.5s both;
+  }
+
+  .animate-contact-title-symphony {
+    animation: contactTitleSymphony 8s ease-in-out infinite;
+  }
+
+  .animate-contact-ornate {
+    animation: contactOrnate 4s ease-in-out infinite;
+  }
+
+  .animate-contact-ornate-delayed {
+    animation: contactOrnate 4s ease-in-out infinite 2s;
+  }
+
+  .animate-contact-ornate-small {
+    animation: contactOrnateSmall 3s ease-in-out infinite;
+  }
+
+  .animate-contact-ornate-small-delayed {
+    animation: contactOrnateSmall 3s ease-in-out infinite 1.5s;
+  }
+
+  .animate-contact-subtitle {
+    animation: contactSubtitle 1s ease-out 1s both;
+  }
+
+  .animate-contact-form-entrance {
+    animation: contactFormEntrance 1.2s ease-out 1.5s both;
+  }
+
+  .animate-contact-border {
+    animation: contactBorder 8s linear infinite;
+  }
+
+  .animate-contact-form-ornate {
+    animation: contactFormOrnate 6s ease-in-out infinite;
+  }
+
+  .animate-contact-form-ornate-delayed {
+    animation: contactFormOrnate 6s ease-in-out infinite 3s;
+  }
+
+  .animate-contact-form-sparkle {
+    animation: contactFormSparkle 4s ease-in-out infinite;
+  }
+
+  .animate-contact-form-sparkle-delayed {
+    animation: contactFormSparkle 4s ease-in-out infinite 2s;
+  }
+
+  .animate-contact-input-entrance {
+    animation: contactInputEntrance 0.8s ease-out 2s both;
+  }
+
+  .animate-contact-input-entrance-delayed {
+    animation: contactInputEntrance 0.8s ease-out 2.2s both;
+  }
+
+  .animate-contact-textarea-entrance {
+    animation: contactTextareaEntrance 0.8s ease-out 2.4s both;
+  }
+
+  .animate-contact-input-ornate {
+    animation: contactInputOrnate 3s ease-in-out infinite;
+  }
+
+  .animate-contact-input-ornate-delayed {
+    animation: contactInputOrnate 3s ease-in-out infinite 1.5s;
+  }
+
+  .animate-contact-textarea-ornate {
+    animation: contactTextareaOrnate 2s ease-in-out infinite;
+  }
+
+  .animate-contact-submit-symphony {
+    animation: contactSubmitSymphony 6s ease-in-out infinite;
+  }
+
+  .animate-contact-submit-ornate {
+    animation: contactSubmitOrnate 2s ease-in-out infinite;
+  }
+
+  .animate-contact-submit-ornate-delayed {
+    animation: contactSubmitOrnate 2s ease-in-out infinite 1s;
+  }
+
+  .animate-contact-submit-small {
+    animation: contactSubmitSmall 4s ease-in-out infinite;
+  }
+
+  .animate-contact-submit-shimmer {
+    animation: contactSubmitShimmer 3s ease-in-out infinite;
+  }
+
+  /* Enhanced Footer Animations */
+  .animate-footer-entrance {
+    animation: footerEntrance 1s ease-out;
+  }
+
+  .animate-footer-ornament-majestic {
+    animation: footerOrnamentMajestic 35s ease-in-out infinite;
+  }
+
+  .animate-footer-ornament-dance {
+    animation: footerOrnamentDance 28s ease-in-out infinite;
+  }
+
+  .animate-footer-ornament-flutter {
+    animation: footerOrnamentFlutter 32s ease-in-out infinite;
+  }
+
+  .animate-footer-ornament-bounce {
+    animation: footerOrnamentBounce 24s ease-in-out infinite;
+  }
+
+  .animate-footer-message-entrance {
+    animation: footerMessageEntrance 1.2s ease-out 0.5s both;
+  }
+
+  .animate-footer-ornate {
+    animation: footerOrnate 8s ease-in-out infinite;
+  }
+
+  .animate-footer-ornate-delayed {
+    animation: footerOrnate 8s ease-in-out infinite 4s;
+  }
+
+  .animate-footer-ornate-small {
+    animation: footerOrnateSmall 6s ease-in-out infinite;
+  }
+
+  .animate-footer-ornate-small-delayed {
+    animation: footerOrnateSmall 6s ease-in-out infinite 3s;
+  }
+
+  .animate-footer-social-entrance {
+    animation: footerSocialEntrance 1.2s ease-out 1s both;
+  }
+
+  .animate-footer-social-dance {
+    animation: footerSocialDance 4s ease-in-out infinite;
+  }
+
+  .animate-footer-social-aura {
+    animation: footerSocialAura 3s ease-in-out infinite;
+  }
+
+  .animate-footer-copyright-entrance {
+    animation: footerCopyrightEntrance 1.2s ease-out 1.5s both;
+  }
+
+  .animate-footer-copyright-ornate {
+    animation: footerCopyrightOrnate 5s ease-in-out infinite;
+  }
+
+  .animate-footer-copyright-ornate-delayed {
+    animation: footerCopyrightOrnate 5s ease-in-out infinite 2.5s;
+  }
+
+  /* Enhanced Keyframe Definitions */
+  @keyframes loadingSpin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes loadingPulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+
+  @keyframes loadingGlow {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes loadingOrnate {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: rotate(180deg) scale(1.1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes pageEntrance {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes clickRipple {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+  @keyframes clickPulse {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+
+  @keyframes clickSparkle {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes clickOrnate {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 1;
+    }
+    25% {
+      transform: scale(0.8) rotate(90deg);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+      opacity: 0.6;
+    }
+    75% {
+      transform: scale(1.8) rotate(270deg);
+      opacity: 0.4;
+    }
+    100% {
+      transform: scale(2.5) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes cursorMagic {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 1;
+    }
+  }
+
+  @keyframes cursorOrbit {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes magicalFloatParticle {
+    0%,
+    100% {
+      transform: translateY(0px) scale(1);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translateY(-30px) scale(1.2);
+      opacity: 1;
+    }
+  }
+
+  @keyframes largeOrnateFloat {
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-25px) translateX(20px) scale(1.05) rotate(5deg);
+    }
+    50% {
+      transform: translateY(-40px) translateX(0px) scale(1.1) rotate(0deg);
+    }
+    75% {
+      transform: translateY(-25px) translateX(-20px) scale(1.05) rotate(-5deg);
+    }
+  }
+
+  @keyframes largeOrnateSpin {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.1);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
+  }
+
+  @keyframes ornatePulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes ornateFloat {
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) rotate(180deg);
+    }
+  }
+
+  @keyframes navEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(-40px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes navItemEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes navIconSpin {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    100% {
+      transform: rotate(360deg) scale(1.2);
+    }
+  }
+
+  @keyframes navTextWave {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes navOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes navIconOrnate {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 1;
+    }
+  }
+
+  @keyframes heroEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(80px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes heroOrbDance {
+    0%,
+    100% {
+      transform: translateX(0px) translateY(0px) scale(1);
+    }
+    25% {
+      transform: translateX(40px) translateY(-25px) scale(1.05);
+    }
+    50% {
+      transform: translateX(0px) translateY(-50px) scale(1.1);
+    }
+    75% {
+      transform: translateX(-40px) translateY(-25px) scale(1.05);
+    }
+  }
+
+  @keyframes heroOrbPulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.25;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes heroBorderSymphony {
+    0% {
+      transform: rotate(0deg) scale(1);
+      border-color: rgba(212, 165, 160, 0.3);
+    }
+    25% {
+      border-color: rgba(200, 184, 213, 0.4);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.02);
+      border-color: rgba(184, 196, 168, 0.3);
+    }
+    75% {
+      border-color: rgba(229, 200, 197, 0.4);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+      border-color: rgba(212, 165, 160, 0.3);
+    }
+  }
+
+  @keyframes heroInnerGlow {
+    0%,
+    100% {
+      box-shadow: 0 0 30px rgba(212, 165, 160, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 60px rgba(200, 184, 213, 0.6), 0 0 100px rgba(184, 196, 168, 0.4);
+    }
+  }
+
+  @keyframes heroContentEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes heroCornerOrnate {
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    50% {
+      transform: translateY(-12px) rotate(360deg) scale(1.2);
+    }
+  }
+
+  @keyframes titleEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes titleSymphony {
+    0% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+    25% {
+      background-position: 25% 50%;
+      transform: scale(1.01);
+    }
+    50% {
+      background-position: 100% 50%;
+      transform: scale(1.03);
+    }
+    75% {
+      background-position: 75% 50%;
+      transform: scale(1.01);
+    }
+    100% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes titleCrown {
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    50% {
+      transform: translateY(-12px) rotate(15deg) scale(1.2);
+    }
+  }
+
+  @keyframes titleOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.3) rotate(180deg);
+    }
+  }
+
+  @keyframes subtitleEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes subtitleOrnate {
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    50% {
+      transform: translateY(-8px) rotate(360deg) scale(1.2);
+    }
+  }
+
+  @keyframes subtitleOrnateSmall {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
+
+  @keyframes subtitleFlow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes quoteOrnate {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes descriptionEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes iconsEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(15px) scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes heroIcon {
+    0%,
+    100% {
+      transform: translateY(0px) scale(1);
+    }
+    50% {
+      transform: translateY(-6px) scale(1.1);
+    }
+  }
+
+  @keyframes sectionEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes sectionOrnamentGrand {
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-30px) translateX(25px) scale(1.05) rotate(90deg);
+    }
+    50% {
+      transform: translateY(-50px) translateX(0px) scale(1.1) rotate(180deg);
+    }
+    75% {
+      transform: translateY(-30px) translateX(-25px) scale(1.05) rotate(270deg);
+    }
+  }
+
+  @keyframes productsHeaderEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes productsTitleSymphony {
+    0% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+    25% {
+      background-position: 25% 50%;
+      transform: scale(1.01);
+    }
+    50% {
+      background-position: 100% 50%;
+      transform: scale(1.02);
+    }
+    75% {
+      background-position: 75% 50%;
+      transform: scale(1.01);
+    }
+    100% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes productsTitleOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
+
+  @keyframes productsTitleCrown {
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    50% {
+      transform: translateY(-10px) rotate(15deg) scale(1.1);
+    }
+  }
+
+  @keyframes productsSubtitle {
+    0% {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes productCardEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes productClick {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.03);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes productInnerGlow {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes productOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
+
+  @keyframes productSparkle {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+
+  @keyframes productCrown {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.1);
+    }
+  }
+
+  @keyframes productTitleWave {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-3px);
+    }
+  }
+
+  @keyframes productPriceDance {
+    0%,
+    100% {
+      transform: scale(1);
+      color: #9a8d7d;
+    }
+    50% {
+      transform: scale(1.05);
+      color: #a89688;
+    }
+  }
+
+  @keyframes productButtonSymphony {
+    0%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 4px 15px rgba(212, 165, 160, 0.3);
+    }
+    50% {
+      transform: scale(1.02);
+      box-shadow: 0 6px 25px rgba(200, 184, 213, 0.4);
+    }
+  }
+
+  @keyframes buttonHeart {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes buttonSparkle {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
+
+  @keyframes buttonShimmer {
+    0% {
+      transform: translateX(-100%) skewX(-12deg);
+    }
+    100% {
+      transform: translateX(200%) skewX(-12deg);
+    }
+  }
+
+  @keyframes storyOrnamentMajestic {
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-40px) translateX(30px) scale(1.1) rotate(90deg);
+    }
+    50% {
+      transform: translateY(-60px) translateX(0px) scale(1.2) rotate(180deg);
+    }
+    75% {
+      transform: translateY(-40px) translateX(-30px) scale(1.1) rotate(270deg);
+    }
+  }
+
+  @keyframes storyOrnamentDance {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+    25% {
+      transform: rotate(90deg) scale(1.05);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.1);
+    }
+    75% {
+      transform: rotate(270deg) scale(1.05);
+    }
+  }
+
+  @keyframes storyOrnamentFloat {
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-30px) rotate(180deg);
+    }
+  }
+
+  @keyframes storiesHeaderEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes storiesTitleSymphony {
+    0% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+    25% {
+      background-position: 25% 50%;
+      transform: scale(1.01);
+    }
+    50% {
+      background-position: 100% 50%;
+      transform: scale(1.02);
+    }
+    75% {
+      background-position: 75% 50%;
+      transform: scale(1.01);
+    }
+    100% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes storiesOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
+
+  @keyframes storiesOrnateSmall {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.1) rotate(90deg);
+    }
+  }
+
+  @keyframes storiesSubtitle {
+    0% {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes storyCardEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes storyClick {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes storyIcon {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(90deg);
+    }
+  }
+
+  @keyframes storyAura {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.2;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes storyTitleOrnate {
+    0%,
+    100% {
+      transform: translateY(0px) scale(1);
+    }
+    50% {
+      transform: translateY(-3px) scale(1.1);
+    }
+  }
+
+  @keyframes storyDecoration {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes storiesImageEntrance {
+    0% {
+      opacity: 0;
+      transform: translateX(30px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0px) scale(1);
+    }
+  }
+
+  @keyframes storiesImageAura {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.05) rotate(2deg);
+    }
+  }
+
+  @keyframes storiesImageOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.1) rotate(180deg);
+    }
+  }
+
+  @keyframes storiesImageSparkle {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(90deg);
+    }
+  }
+
+  @keyframes aboutPortraitEntrance {
+    0% {
+      opacity: 0;
+      transform: translateX(-30px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0px) scale(1);
+    }
+  }
+
+  @keyframes aboutPortraitAura {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    25% {
+      transform: scale(1.02) rotate(1deg);
+    }
+    50% {
+      transform: scale(1.05) rotate(0deg);
+    }
+    75% {
+      transform: scale(1.02) rotate(-1deg);
+    }
+  }
+
+  @keyframes aboutPortraitOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.1) rotate(180deg);
+    }
+  }
+
+  @keyframes aboutPortraitSparkle {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes aboutContentEntrance {
+    0% {
+      opacity: 0;
+      transform: translateX(30px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0px) scale(1);
+    }
+  }
+
+  @keyframes aboutTitleSymphony {
+    0% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+    25% {
+      background-position: 25% 50%;
+      transform: scale(1.01);
+    }
+    50% {
+      background-position: 100% 50%;
+      transform: scale(1.02);
+    }
+    75% {
+      background-position: 75% 50%;
+      transform: scale(1.01);
+    }
+    100% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes aboutTitleCrown {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(15deg);
+    }
+  }
+
+  @keyframes aboutTitleHeart {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes aboutContentOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.1) rotate(180deg);
+    }
+  }
+
+  @keyframes aboutContentSparkle {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes aboutSignatureOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
+
+  @keyframes aboutSignatureSmall {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes contactOrnamentGrand {
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-50px) translateX(40px) scale(1.1) rotate(90deg);
+    }
+    50% {
+      transform: translateY(-80px) translateX(0px) scale(1.2) rotate(180deg);
+    }
+    75% {
+      transform: translateY(-50px) translateX(-40px) scale(1.1) rotate(270deg);
+    }
+  }
+
+  @keyframes contactOrnamentFlutter {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+    25% {
+      transform: rotate(90deg) scale(1.05);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.1);
+    }
+    75% {
+      transform: rotate(270deg) scale(1.05);
+    }
+  }
+
+  @keyframes contactHeaderEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes contactTitleSymphony {
+    0% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+    25% {
+      background-position: 25% 50%;
+      transform: scale(1.01);
+    }
+    50% {
+      background-position: 100% 50%;
+      transform: scale(1.02);
+    }
+    75% {
+      background-position: 75% 50%;
+      transform: scale(1.01);
+    }
+    100% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes contactOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
+
+  @keyframes contactOrnateSmall {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes contactSubtitle {
+    0% {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes contactFormEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(30px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes contactBorder {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes contactFormOrnate {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.1) rotate(180deg);
+    }
+  }
+
+  @keyframes contactFormSparkle {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes contactInputEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(15px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes contactTextareaEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(15px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes contactInputOrnate {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes contactTextareaOrnate {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes contactSubmitSymphony {
+    0%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 6px 20px rgba(212, 165, 160, 0.3);
+    }
+    50% {
+      transform: scale(1.01);
+      box-shadow: 0 8px 30px rgba(200, 184, 213, 0.4);
+    }
+  }
+
+  @keyframes contactSubmitOrnate {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes contactSubmitSmall {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes contactSubmitShimmer {
+    0% {
+      transform: translateX(-100%) skewX(-12deg);
+    }
+    100% {
+      transform: translateX(200%) skewX(-12deg);
+    }
+  }
+
+  @keyframes footerEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes footerOrnamentMajestic {
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-60px) translateX(50px) scale(1.2) rotate(90deg);
+    }
+    50% {
+      transform: translateY(-100px) translateX(0px) scale(1.4) rotate(180deg);
+    }
+    75% {
+      transform: translateY(-60px) translateX(-50px) scale(1.2) rotate(270deg);
+    }
+  }
+
+  @keyframes footerOrnamentDance {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    25% {
+      transform: scale(1.1) rotate(90deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+    }
+    75% {
+      transform: scale(1.1) rotate(270deg);
+    }
+  }
+
+  @keyframes footerOrnamentFlutter {
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-40px) rotate(180deg);
+    }
+  }
+
+  @keyframes footerOrnamentBounce {
+    0%,
+    100% {
+      transform: translateY(0px) scale(1);
+    }
+    50% {
+      transform: translateY(-20px) scale(1.1);
+    }
+  }
+
+  @keyframes footerMessageEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes footerOrnate {
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    50% {
+      transform: translateY(-10px) rotate(180deg) scale(1.2);
+    }
+  }
+
+  @keyframes footerOrnateSmall {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes footerSocialEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(15px) scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes footerSocialDance {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+    25% {
+      transform: rotate(90deg) scale(1.1);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.2);
+    }
+    75% {
+      transform: rotate(270deg) scale(1.1);
+    }
+  }
+
+  @keyframes footerSocialAura {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes footerCopyrightEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes footerCopyrightOrnate {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, #f3ede5, #e8e2db, #ede6dd);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #d4a5a0, #c8b8d5, #b8c4a8);
+  border-radius: 6px;
+  border: 2px solid #f3ede5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #c0b0a0, #d4a5a0, #c8b8d5);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom selection */
+::selection {
+  background: linear-gradient(45deg, #c8b8d5, #e5c8c5, #d4a5a0);
+  color: #a89688;
+}
+
+/* Enhanced cursor effects */
+* {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="%23d4a5a0" opacity="0.6"/><circle cx="10" cy="10" r="3" fill="%239a8d7d"/></svg>'),
+    auto;
+}
+
+button,
+a {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="%23c8b8d5" opacity="0.7"/><circle cx="10" cy="10" r="3" fill="%239a8d7d"/></svg>'),
+    pointer;
+}
