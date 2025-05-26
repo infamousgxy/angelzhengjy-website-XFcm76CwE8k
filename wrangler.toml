@@ -1,9 +1,8 @@
 name = "angelzhengjy-website"
 compatibility_date = "2025-05-26"
 
-# Cloudflare Pages 静态资源配置
-[assets]
-directory = "./out"
+# Cloudflare Pages 配置
+pages_build_output_dir = "out"
 
 [env.production]
 compatibility_date = "2025-05-26" 
