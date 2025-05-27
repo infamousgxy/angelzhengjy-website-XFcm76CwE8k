@@ -166,14 +166,30 @@ export default function AngelZhengJYWebsite() {
     <div className="fixed inset-0 z-[100] bg-gradient-to-br from-[#f3ede5] via-[#e8e2db] to-[#ede6dd] flex items-center justify-center">
       <div className="text-center">
         <div className="relative mb-8">
-          <div className="w-32 h-32 border-6 border-[#d4a5a0]/40 rounded-full animate-loading-spin"></div>
-          <div className="absolute inset-4 border-4 border-[#c8b8d5] rounded-full animate-loading-spin-reverse"></div>
-          <div className="absolute inset-8 border-2 border-[#b8c4a8] rounded-full animate-loading-pulse"></div>
-          <div className="absolute inset-10 bg-gradient-to-r from-[#d4a5a0] to-[#c8b8d5] rounded-full animate-loading-glow"></div>
-          <div className="absolute inset-2 border border-[#d4c4a8] rounded-full animate-loading-ornate opacity-60"></div>
+          {/* Apply will-change to elements with transform or opacity animations */}
+          <div
+            className="w-32 h-32 border-6 border-[#d4a5a0]/40 rounded-full animate-loading-spin"
+            style={{ willChange: 'transform' }}
+          ></div>
+          <div
+            className="absolute inset-4 border-4 border-[#c8b8d5] rounded-full animate-loading-spin-reverse"
+            style={{ willChange: 'transform' }}
+          ></div>
+          <div
+            className="absolute inset-8 border-2 border-[#b8c4a8] rounded-full animate-loading-pulse"
+            style={{ willChange: 'transform, opacity' }}
+          ></div>
+          <div
+            className="absolute inset-10 bg-gradient-to-r from-[#d4a5a0] to-[#c8b8d5] rounded-full animate-loading-glow"
+            style={{ willChange: 'opacity, box-shadow' }} /* box-shadow might not benefit much */
+          ></div>
+          <div
+            className="absolute inset-2 border border-[#d4c4a8] rounded-full animate-loading-ornate opacity-60"
+            style={{ willChange: 'transform, opacity' }}
+          ></div>
         </div>
         <h1 className="text-4xl font-bold baroque-title-font text-transparent bg-gradient-to-r from-[#a89688] via-[#9a8d7d] to-[#c0b0a0] bg-clip-text mb-4">
-          AngelZhengJY
+          Angel
         </h1>
         <p className="text-xl baroque-script-font text-[#9a8d7d] mb-6">梦境正在编织中...</p>
         <div className="w-64 h-2 bg-[#e8e2db] rounded-full overflow-hidden border border-[#d4a5a0]/30">

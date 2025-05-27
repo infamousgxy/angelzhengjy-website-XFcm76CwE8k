@@ -487,11 +487,7 @@ export default function SheepPage() {
 
       {/* 场景容器 */}
       <div ref={sceneRef} className="scene relative w-full h-screen min-h-screen">
-        {/* 太阳 */}
-        <div className="sun absolute top-[10%] right-[15%] w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-lg animate-spin" 
-             style={{ animationDuration: '20s' }}>
-          <div className="absolute -inset-2 bg-yellow-300/30 rounded-full blur-lg"></div>
-        </div>
+        {/* 太阳元素被移除 */}
 
         {/* 云朵 */}
         <div className="clouds absolute top-0 w-full h-[40%] overflow-hidden">
