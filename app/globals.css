@@ -176,19 +176,20 @@
 
   /* Enhanced Navigation Animations */
   .animate-nav-entrance {
-    animation: navEntrance 1s ease-out 0.5s both;
+    animation: navEntrance 0.7s ease-out 0.5s both;
   }
 
   .animate-nav-item {
-    animation: navItemEntrance 0.8s ease-out both;
+    animation: navItemEntrance 0.6s ease-out both;
   }
 
   .animate-nav-icon-spin {
-    animation: navIconSpin 0.5s ease-in-out;
+    animation: navIconSpin 1.5s linear;
+    will-change: transform;
   }
 
   .animate-nav-text-wave {
-    animation: navTextWave 0.5s ease-in-out;
+    animation: navTextWave 0.3s ease-in-out;
   }
 
   .animate-nav-ornate {
@@ -965,10 +966,10 @@
 
   @keyframes navIconSpin {
     0% {
-      transform: rotate(0deg) scale(1);
+      transform: rotate(0deg);
     }
     100% {
-      transform: rotate(360deg) scale(1.2);
+      transform: rotate(360deg);
     }
   }
 
