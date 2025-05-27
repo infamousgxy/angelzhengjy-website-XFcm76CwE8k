@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, ReactNode } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -27,6 +27,8 @@ export default function SheepPage() {
   const [selectedSheep, setSelectedSheep] = useState<SheepData | null>(null)
   const [catchCount, setCatchCount] = useState(0)
   const sceneRef = useRef<HTMLDivElement>(null)
+  const [cloudNodes, setCloudNodes] = useState<ReactNode[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
   
   const sheepCount = 7
   // 基础大小增加到2.3倍
@@ -128,6 +130,61 @@ export default function SheepPage() {
       })
     }
   }, []) // 移除allSheep依赖，避免无限循环
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) { // Check if component is mounted (client-side)
+      const generateCloudElements = () => {
+        // All calculations depending on window or random values are now inside this function
+        // which is only called client-side after mount.
+        return Array.from({ length: 10 }).map((_, i) => {
+          const cloudId = ((i % 4) + 1);
+          const baseWidth = 100 + Math.random() * 120;
+          const width = baseWidth * 2; 
+          const height = (baseWidth / 3) * 1.8 * 2; // Maintain aspect ratio for the doubled baseWidth
+
+          let topValuePercent = 5 + Math.random() * 50; // Default/fallback top
+          if (typeof window !== 'undefined' && window.innerHeight > 0) {
+             const cloudsContainerHeightPx = window.innerHeight * 0.4; 
+             if (cloudsContainerHeightPx > 0) {
+                const cloudHeightRatio = height / cloudsContainerHeightPx;
+                let maxTop = (1 - cloudHeightRatio) * 100 - 10; // 10% buffer from bottom
+                maxTop = Math.max(5, maxTop); // Ensure clouds are not too high (min 5% from top)
+                maxTop = Math.min(maxTop, 65); // Ensure clouds don't start too low (max 65% from top)
+                topValuePercent = Math.random() * maxTop;
+             }
+          }
+          
+          const initialOffscreenDistance = width + Math.random() * 250; 
+
+          return (
+            <div
+              key={`cloud-${i}-${Math.random()}`} // Add random to key to help with re-renders if needed, though not ideal
+              className="cloud absolute opacity-80"
+              style={{
+                width: `${width}px`,
+                height: `${height}px`,
+                backgroundImage: `url('/sheep/cloud${cloudId}.png')`,
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                top: `${topValuePercent}%`,
+                left: `-${initialOffscreenDistance}px`, 
+                animationName: 'floatLeftToRight',
+                animationTimingFunction: 'linear',
+                animationIterationCount: 'infinite',
+                animationDelay: `${Math.random() * 30}s`, 
+                animationDuration: `${35 + Math.random() * 30}s` 
+              }}
+            />
+          );
+        });
+      };
+      setCloudNodes(generateCloudElements());
+    }
+  }, [isMounted, allSheep.length]); // Re-generate clouds if isMounted changes or sheep are interacted with (as a proxy for potential re-renders)
 
   // 创建小羊
   const createSheep = () => {
@@ -563,24 +620,8 @@ export default function SheepPage() {
         {/* 太阳元素被移除 */}
 
         {/* 云朵 */}
-        <div className="clouds absolute top-0 w-full h-[40%] overflow-hidden">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className={`cloud absolute opacity-85 animate-float`}
-              style={{
-                width: `${160 + i * 20}px`,
-                height: `${100 + i * 15}px`,
-                backgroundImage: `url('/sheep/cloud${((i - 1) % 3) + 1}.png')`,
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                top: `${5 + (i % 4) * 8}%`, // 更均匀的垂直分布，4行分布
-                left: `-${300 + i * 150}px`, // 增加水平间距到150px
-                animationDelay: `${-i * 5}s`, // 增加延迟间隔到5秒
-                animationDuration: `${20 + i * 3}s` // 增加动画持续时间差异
-              }}
-            />
-          ))}
+        <div className="clouds absolute top-0 w-full h-[40%] overflow-hidden pointer-events-none">
+          {cloudNodes}
         </div>
         
         {/* 抓羊计数器 */}
@@ -654,6 +695,19 @@ export default function SheepPage() {
         @keyframes float {
           from { transform: translateX(0); }
           to { transform: translateX(calc(100vw + 150px)); }
+        }
+
+        @keyframes floatLeftToRight {
+          from { transform: translateX(0); }
+          to { transform: translateX(calc(100vw + 300px)); } /* Ensure full exit for varied widths */
+        }
+
+        @keyframes floatRightToLeft {
+          from { transform: translateX(0); }
+          /* Start position is already calc(100vw + offset), so target is to move leftwards across the screen */
+          /* We need to move it by -(100vw + its own width + initial offset) */
+          /* For simplicity, let's define a large enough negative translation */
+          to { transform: translateX(calc(-100vw - 300px)); }
         }
 
         .animate-float {
