@@ -41,16 +41,26 @@ export default function SheepPage() {
   // 动态调整小羊大小
   const adjustSheepSize = () => {
     const screenWidth = window.innerWidth
+    const screenHeight = window.innerHeight
     let scaleFactor = 1
     
+    // 根据屏幕尺寸和设备类型调整缩放因子
     if (screenWidth <= 480) {
-      scaleFactor = 0.8 // 超小屏幕稍微小一点
+      scaleFactor = 0.7 // 小手机屏幕
     } else if (screenWidth <= 768) {
-      scaleFactor = 1.0 // 平板保持基础大小
-    } else if (screenWidth <= 1200) {
-      scaleFactor = 1.2 // 中等屏幕稍大
+      scaleFactor = 0.9 // 大手机/小平板
+    } else if (screenWidth <= 1024) {
+      scaleFactor = 1.1 // 平板
+    } else if (screenWidth <= 1440) {
+      scaleFactor = 1.3 // 笔记本
     } else {
-      scaleFactor = 1.4 // 大屏幕更大
+      scaleFactor = 1.5 // 大屏幕
+    }
+    
+    // 考虑屏幕高度，避免羊太大
+    const heightFactor = screenHeight / 800 // 基准高度800px
+    if (heightFactor < 1) {
+      scaleFactor *= heightFactor
     }
     
     const newFrameWidth = baseFrameWidth * scaleFactor
@@ -59,7 +69,7 @@ export default function SheepPage() {
     setFrameWidth(newFrameWidth)
     setFrameHeight(newFrameHeight)
     
-    console.log(`屏幕宽度: ${screenWidth}px, 缩放因子: ${scaleFactor}, 小羊大小: ${newFrameWidth}x${newFrameHeight}`)
+    console.log(`屏幕尺寸: ${screenWidth}x${screenHeight}px, 缩放因子: ${scaleFactor.toFixed(2)}, 小羊大小: ${newFrameWidth.toFixed(1)}x${newFrameHeight.toFixed(1)}px`)
     
     return { width: newFrameWidth, height: newFrameHeight, scaleFactor }
   }
@@ -197,6 +207,7 @@ export default function SheepPage() {
         startDraggingSheep(e, sheepData)
       })
       
+      // 修复触控事件处理
       sheepElement.addEventListener('touchstart', (e) => {
         e.preventDefault()
         const touch = e.touches[0]
@@ -205,7 +216,16 @@ export default function SheepPage() {
           clientX: touch.clientX,
           clientY: touch.clientY
         } as MouseEvent, sheepData)
-      })
+      }, { passive: false })
+      
+      // 阻止触控元素的默认行为
+      sheepElement.addEventListener('touchmove', (e) => {
+        e.preventDefault()
+      }, { passive: false })
+      
+      sheepElement.addEventListener('touchend', (e) => {
+        e.preventDefault()
+      }, { passive: false })
       
       newSheep.push(sheepData)
       updateSheepFrame(sheepData)
@@ -270,6 +290,8 @@ export default function SheepPage() {
     if (sheepData.element) {
       sheepData.element.classList.add('dragging')
       sheepData.element.style.cursor = 'grabbing'
+      // 添加触控反馈
+      sheepData.element.style.transform = 'scale(1.1)'
     }
     stopAutoWalkSheep(sheepData)
     
@@ -419,7 +441,7 @@ export default function SheepPage() {
     }
   };
 
-  // 全局鼠标事件
+  // 全局鼠标和触控事件
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (selectedSheep && selectedSheep.isDragging) {
@@ -453,6 +475,8 @@ export default function SheepPage() {
         if (selectedSheep.element) {
           selectedSheep.element.classList.remove('dragging')
           selectedSheep.element.style.cursor = 'grab'
+          // 重置缩放效果
+          selectedSheep.element.style.transform = selectedSheep.direction === 1 ? 'scaleX(-1)' : 'scaleX(1)'
         }
         // 立即更新一次动画帧，确保切换到行走动画的第一帧
         updateSheepFrame(selectedSheep)
@@ -460,12 +484,61 @@ export default function SheepPage() {
       }
     }
 
+    // 触控事件处理
+    const handleTouchMove = (e: TouchEvent) => {
+      if (selectedSheep && selectedSheep.isDragging && e.touches.length > 0) {
+        e.preventDefault()
+        
+        const touch = e.touches[0]
+        const newX = touch.clientX - dragOffset.current.x
+        const newY = touch.clientY - dragOffset.current.y
+        const bottomY = window.innerHeight - newY - frameHeight
+        
+        if (selectedSheep.container) {
+          selectedSheep.container.style.left = newX + 'px'
+          selectedSheep.container.style.bottom = bottomY + 'px'
+        }
+        
+        selectedSheep.currentX = newX
+        selectedSheep.currentY = bottomY
+        
+        // 更新动画帧 - 拖拽时也要更新帧数
+        selectedSheep.totalDistance += 5
+        selectedSheep.currentFrame = Math.floor(selectedSheep.totalDistance / frameDistance) % 8
+        updateSheepFrame(selectedSheep)
+      }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (selectedSheep && selectedSheep.isDragging) {
+        e.preventDefault()
+        console.log('停止触控拖拽小羊:', selectedSheep.id)
+        selectedSheep.isDragging = false
+        selectedSheep.currentFrame = 0 // 重置动画帧到第一帧
+        selectedSheep.totalDistance = 0 // 重置总距离
+        if (selectedSheep.element) {
+          selectedSheep.element.classList.remove('dragging')
+          selectedSheep.element.style.cursor = 'grab'
+          // 重置缩放效果
+          selectedSheep.element.style.transform = selectedSheep.direction === 1 ? 'scaleX(-1)' : 'scaleX(1)'
+        }
+        // 立即更新一次动画帧，确保切换到行走动画的第一帧
+        updateSheepFrame(selectedSheep)
+        dropSheepToGround(selectedSheep)
+      }
+    }
+
+    // 添加事件监听器
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+    document.addEventListener('touchend', handleTouchEnd, { passive: false })
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('touchmove', handleTouchMove)
+      document.removeEventListener('touchend', handleTouchEnd)
     }
   }, [selectedSheep, frameHeight, frameDistance])
 
@@ -527,8 +600,13 @@ export default function SheepPage() {
           background-position: 0 0;
           filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
           cursor: grab;
-          transition: transform 0.1s ease;
+          transition: transform 0.2s ease;
           user-select: none;
+          /* 优化触控体验 */
+          touch-action: none;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -webkit-tap-highlight-color: transparent;
         }
 
         .sheep:active {
@@ -537,7 +615,29 @@ export default function SheepPage() {
 
         .sheep.dragging {
           z-index: 1000;
-          transform: scale(1.1);
+          transition: none;
+          filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.4));
+        }
+
+        /* 触控设备优化 */
+        @media (hover: none) and (pointer: coarse) {
+          .sheep {
+            /* 增加触控区域 */
+            padding: 10px;
+            margin: -10px;
+            /* 触控反馈 */
+            transition: transform 0.1s ease;
+          }
+          
+          .sheep:active {
+            transform: scale(1.05);
+          }
+          
+          .catch-counter {
+            /* 手机端计数器优化 */
+            font-size: 14px;
+            padding: 8px 12px;
+          }
         }
 
         .sun::before {
@@ -575,13 +675,21 @@ export default function SheepPage() {
           100% { transform: scale(1); }
         }
 
-        /* 响应式设计 - 移除固定大小，让JavaScript控制 */
+        /* 响应式设计 */
         @media (max-width: 768px) {
           .catch-counter {
             top: 10px;
             right: 10px;
             padding: 12px 16px;
             font-size: 16px;
+          }
+          
+          /* 防止页面滚动 */
+          body {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
           }
         }
       `}</style>
