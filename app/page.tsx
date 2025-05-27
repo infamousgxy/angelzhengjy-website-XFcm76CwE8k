@@ -208,7 +208,13 @@ export default function AngelZhengJYWebsite() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f3ede5] via-[#e8e2db] via-[#ede6dd] to-[#f0e9e0] relative overflow-x-hidden animate-page-entrance">
+    <div className="min-h-screen relative overflow-x-hidden animate-page-entrance">
+      {/* 背景图片层 */}
+      <div className="fixed inset-0 z-0 hero-background" />
+      
+      {/* 背景遮罩层，保持原有的梦幻效果 */}
+      <div className="fixed inset-0 z-1 bg-gradient-to-br from-[#f3ede5]/60 via-[#e8e2db]/40 via-[#ede6dd]/50 to-[#f0e9e0]/60"></div>
+      
       {/* Enhanced Magic Cursor Trail */}
       <div
         className="fixed w-6 h-6 pointer-events-none z-40 mix-blend-multiply"
@@ -280,63 +286,63 @@ export default function AngelZhengJYWebsite() {
 
       {/* Enhanced Navigation */}
       <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
-        <nav
+      <nav
           className={`transition-all duration-1000 animate-nav-entrance ${
-            isScrolled ? "backdrop-blur-xl bg-white/70" : "backdrop-blur-lg bg-white/50"
+          isScrolled ? "backdrop-blur-xl bg-white/70" : "backdrop-blur-lg bg-white/50"
           } rounded-full px-4 md:px-10 py-3 md:py-5 border-2 border-[#d4a5a0]/40 shadow-xl hover:shadow-2xl transition-shadow duration-500 relative w-full max-w-4xl`}
-        >
-          {/* Ornate nav decoration */}
-          <div className="absolute top-2 left-4 w-4 h-4 bg-gradient-to-r from-[#d4a5a0] to-[#c8b8d5] rounded-full opacity-60 animate-nav-ornate"></div>
-          <div className="absolute top-2 right-4 w-4 h-4 bg-gradient-to-r from-[#b8c4a8] to-[#d4c4a8] rounded-full opacity-60 animate-nav-ornate-delayed"></div>
+      >
+        {/* Ornate nav decoration */}
+        <div className="absolute top-2 left-4 w-4 h-4 bg-gradient-to-r from-[#d4a5a0] to-[#c8b8d5] rounded-full opacity-60 animate-nav-ornate"></div>
+        <div className="absolute top-2 right-4 w-4 h-4 bg-gradient-to-r from-[#b8c4a8] to-[#d4c4a8] rounded-full opacity-60 animate-nav-ornate-delayed"></div>
 
           <div className="flex items-center justify-center space-x-3 md:space-x-8 overflow-x-auto scrollbar-hide">
-            {[
-              { name: "首页", id: "home" },
-              { name: "精选丝巾", id: "products" },
-              { name: "关于 Angel", id: "about" },
-              { name: "灵感故事", id: "stories" },
-              { name: "联系我们", id: "contact" },
-            ].map((item, index) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="group flex items-center space-x-2 md:space-x-3 text-[#a89688] hover:text-[#9a8d7d] transition-all duration-700 hover:scale-110 relative animate-nav-item whitespace-nowrap flex-shrink-0"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="relative">
-                  <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-current rounded-full group-hover:animate-nav-icon-spin relative">
-                    <div className="absolute inset-0.5 bg-current rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="absolute inset-0 border border-[#d4c4a8] rounded-full opacity-0 group-hover:opacity-60 animate-nav-icon-ornate"></div>
-                  </div>
-                </div>
-                <span className="text-sm md:text-base font-medium group-hover:animate-nav-text-wave tracking-wide baroque-font">
-                  {item.name}
-                </span>
-                <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4a5a0] via-[#c8b8d5] to-[#b8c4a8] scale-x-0 group-hover:scale-x-100 transition-transform duration-700 rounded-full"></div>
-              </button>
-            ))}
-            
-            {/* 快来数羊链接 */}
-            <Link
-              href="/sheep"
+          {[
+            { name: "首页", id: "home" },
+            { name: "精选丝巾", id: "products" },
+            { name: "关于 Angel", id: "about" },
+            { name: "灵感故事", id: "stories" },
+            { name: "联系我们", id: "contact" },
+          ].map((item, index) => (
+            <button
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
               className="group flex items-center space-x-2 md:space-x-3 text-[#a89688] hover:text-[#9a8d7d] transition-all duration-700 hover:scale-110 relative animate-nav-item whitespace-nowrap flex-shrink-0"
-              style={{ animationDelay: `${5 * 0.1}s` }}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative">
-                <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-current rounded-full group-hover:animate-nav-icon-spin relative">
+                  <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-current rounded-full group-hover:animate-nav-icon-spin relative">
                   <div className="absolute inset-0.5 bg-current rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="absolute inset-0 border border-[#d4c4a8] rounded-full opacity-0 group-hover:opacity-60 animate-nav-icon-ornate"></div>
-                  {/* 小羊图标 */}
-                  <div className="absolute inset-1 text-xs flex items-center justify-center">🐑</div>
                 </div>
               </div>
               <span className="text-sm md:text-base font-medium group-hover:animate-nav-text-wave tracking-wide baroque-font">
-                快来数羊
+                {item.name}
               </span>
               <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4a5a0] via-[#c8b8d5] to-[#b8c4a8] scale-x-0 group-hover:scale-x-100 transition-transform duration-700 rounded-full"></div>
-            </Link>
-          </div>
-        </nav>
+            </button>
+          ))}
+          
+          {/* 快来数羊链接 */}
+          <Link
+            href="/sheep"
+            className="group flex items-center space-x-2 md:space-x-3 text-[#a89688] hover:text-[#9a8d7d] transition-all duration-700 hover:scale-110 relative animate-nav-item whitespace-nowrap flex-shrink-0"
+            style={{ animationDelay: `${5 * 0.1}s` }}
+          >
+            <div className="relative">
+                <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-current rounded-full group-hover:animate-nav-icon-spin relative">
+                <div className="absolute inset-0.5 bg-current rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 border border-[#d4c4a8] rounded-full opacity-0 group-hover:opacity-60 animate-nav-icon-ornate"></div>
+                {/* 小羊图标 */}
+                <div className="absolute inset-1 text-xs flex items-center justify-center">🐑</div>
+              </div>
+            </div>
+            <span className="text-sm md:text-base font-medium group-hover:animate-nav-text-wave tracking-wide baroque-font">
+              快来数羊
+            </span>
+            <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4a5a0] via-[#c8b8d5] to-[#b8c4a8] scale-x-0 group-hover:scale-x-100 transition-transform duration-700 rounded-full"></div>
+          </Link>
+        </div>
+      </nav>
       </div>
 
       {/* Enhanced Hero Section */}

@@ -574,10 +574,10 @@ export default function SheepPage() {
                 backgroundImage: `url('/sheep/cloud${((i - 1) % 3) + 1}.png')`,
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'contain',
-                top: `${8 + (i % 3) * 10}%`,
-                left: `-${200 + i * 20}px`,
-                animationDelay: `${-i * 3}s`,
-                animationDuration: `${18 + i * 2}s`
+                top: `${5 + (i % 4) * 8}%`, // 更均匀的垂直分布，4行分布
+                left: `-${300 + i * 150}px`, // 增加水平间距到150px
+                animationDelay: `${-i * 5}s`, // 增加延迟间隔到5秒
+                animationDuration: `${20 + i * 3}s` // 增加动画持续时间差异
               }}
             />
           ))}

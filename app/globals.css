@@ -2239,3 +2239,55 @@ a {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
 }
+
+/* 响应式背景图片样式 */
+.hero-background {
+  background-image: url('/images/hero.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 移动设备优化 */
+@media (max-width: 768px) {
+  .hero-background {
+    background-attachment: scroll; /* 移动设备上使用scroll而不是fixed */
+    background-size: cover;
+    background-position: center top; /* 移动设备上优先显示图片上部 */
+  }
+}
+
+/* 平板设备优化 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero-background {
+    background-position: center center;
+    background-size: cover;
+  }
+}
+
+/* 大屏幕优化 */
+@media (min-width: 1025px) {
+  .hero-background {
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+  }
+}
+
+/* 超宽屏优化 */
+@media (min-width: 1920px) {
+  .hero-background {
+    background-size: 100% auto; /* 超宽屏时确保图片完整显示 */
+    background-position: center center;
+  }
+}
+
+/* 高分辨率设备优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .hero-background {
+    background-size: cover;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
