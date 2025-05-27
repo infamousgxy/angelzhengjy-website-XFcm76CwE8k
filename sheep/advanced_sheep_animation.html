@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>高级小羊行走动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('WechatIMG1675.jpg') center center / cover no-repeat;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 太阳 */
+        .sun {
+            position: absolute;
+            top: 10%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            border-radius: 50%;
+            box-shadow: 0 0 30px #FFD700;
+            animation: rotate 20s linear infinite;
+        }
+
+        .sun::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+            border-radius: 50%;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 云朵 */
+        .clouds {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 40%;
+        }
+
+        .cloud {
+            position: absolute;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.85;
+            animation: float 15s linear infinite;
+            filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.1));
+        }
+
+        /* 移除伪元素样式 */
+        .cloud::before,
+        .cloud::after {
+            display: none;
+        }
+
+        .cloud1 {
+            width: 240px;
+            height: 160px;
+            background-image: url('cloud1.png');
+            top: 12%;
+            left: -280px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .cloud2 {
+            width: 180px;
+            height: 120px;
+            background-image: url('cloud2.png');
+            top: 28%;
+            left: -220px;
+            animation-delay: -6s;
+            animation-duration: 22s;
+        }
+
+        .cloud3 {
+            width: 220px;
+            height: 140px;
+            background-image: url('cloud3.png');
+            top: 8%;
+            left: -260px;
+            animation-delay: -12s;
+            animation-duration: 20s;
+        }
+
+        .cloud4 {
+            width: 200px;
+            height: 130px;
+            background-image: url('cloud1.png');
+            top: 35%;
+            left: -240px;
+            animation-delay: -3s;
+            animation-duration: 25s;
+        }
+
+        .cloud5 {
+            width: 160px;
+            height: 100px;
+            background-image: url('cloud2.png');
+            top: 15%;
+            left: -200px;
+            animation-delay: -9s;
+            animation-duration: 19s;
+        }
+
+        .cloud6 {
+            width: 190px;
+            height: 120px;
+            background-image: url('cloud3.png');
+            top: 22%;
+            left: -230px;
+            animation-delay: -15s;
+            animation-duration: 23s;
+        }
+
+        @keyframes float {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(100vw + 150px)); }
+        }
+
+        /* 小羊动画 */
+        .sheep-container {
+            position: absolute;
+            bottom: 0; /* 改为直接在底部 */
+            left: 50px;
+            transition: none;
+        }
+
+        .sheep {
+            width: 64px; /* 缩小到一半 */
+            height: 64px; /* 缩小到一半 */
+            background-image: url('image.png');
+            background-repeat: no-repeat;
+            background-size: 512px 128px; /* 恢复原始大小，8帧x2排 */
+            background-position: 0 0;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+            cursor: grab;
+            transition: transform 0.1s ease;
+            user-select: none;
+        }
+
+        .sheep:active {
+            cursor: grabbing;
+        }
+
+        .sheep.dragging {
+            z-index: 1000;
+            transform: scale(1.1);
+        }
+
+        /* 抓羊计数器 */
+        .catch-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .catch-counter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+
+        .catch-counter .emoji {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        .catch-counter .count {
+            color: #4CAF50;
+            font-size: 22px;
+        }
+
+        /* 抓羊动画效果 */
+        .catch-animation {
+            animation: catchEffect 0.5s ease-out;
+        }
+
+        @keyframes catchEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); background: rgba(76, 175, 80, 0.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            /* 小羊在手机上稍微小一点 */
+            .sheep {
+                width: 96px;
+                height: 96px;
+                background-size: 768px 192px;
+            }
+            
+            /* 计数器在手机上的适配 */
+            .catch-counter {
+                top: 10px;
+                right: 10px;
+                padding: 12px 16px;
+                font-size: 16px;
+            }
+            
+            .catch-counter .emoji {
+                font-size: 20px;
+                margin-right: 6px;
+            }
+            
+            .catch-counter .count {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <!-- 太阳 -->
+        <div class="sun"></div>
+        
+        <!-- 云朵 -->
+        <div class="clouds">
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            <div class="cloud cloud3"></div>
+            <div class="cloud cloud4"></div>
+            <div class="cloud cloud5"></div>
+            <div class="cloud cloud6"></div>
+        </div>
+        
+        <!-- 抓羊计数器 -->
+        <div class="catch-counter" id="catchCounter">
+            <span class="emoji">🐑</span>
+            抓到: <span class="count" id="catchCount">0</span> 只
+        </div>
+        
+        <!-- 小羊现在通过JavaScript动态创建 -->
+    </div>
+
+    <script>
+        // 多只小羊管理
+        let allSheep = [];
+        let selectedSheep = null;
+        let sheepCount = 7; // 固定6只小羊
+        
+        // 抓羊计数器
+        let catchCount = 0;
+        
+        // 动画状态
+        let currentFrame = 0;
+        let isWalking = false;
+        let isDragging = false;
+        let isAutoWalking = false;
+        let isLarge = false;
+        let direction = 1; // 1为右，-1为左
+        let moveSpeed = 3.5; // 默认速度改为原来的0.7倍
+        let frameWidth = 64; // 缩小到一半，从128改为64
+        let frameHeight = 64; // 缩小到一半，从128改为64
+        
+        // 位置和移动
+        let currentX = 50;
+        let currentY = 0; // 改为底部
+        let lastX = currentX;
+        let totalDistance = 0;
+        let frameDistance = 10; // 每移动10像素更新一帧（原来是20，现在更快）
+        
+        // 拖拽相关
+        let dragOffset = { x: 0, y: 0 };
+        let autoWalkInterval = null;
+
+        // 初始化
+        function init() {
+            console.log('开始初始化...');
+            console.log('frameWidth:', frameWidth, 'frameHeight:', frameHeight);
+            console.log('sheepCount:', sheepCount);
+            
+            createSheep();
+            
+            console.log('创建小羊后，allSheep.length:', allSheep.length);
+            console.log('allSheep:', allSheep);
+            
+            console.log('初始化完成，创建了', allSheep.length, '只小羊');
+        }
+
+        // 更新小羊位置
+        function updateSheepPosition(sheepData = null) {
+            if (sheepData) {
+                sheepData.container.style.left = sheepData.currentX + 'px';
+                sheepData.container.style.bottom = sheepData.currentY + 'px';
+            } else if (selectedSheep) {
+                selectedSheep.container.style.left = selectedSheep.currentX + 'px';
+                selectedSheep.container.style.bottom = selectedSheep.currentY + 'px';
+            }
+        }
+
+        // 更新动画帧
+        function updateFrame() {
+            const row = isDragging ? 1 : 0; // 0为走路，1为拖拽
+            const frameX = -(currentFrame * frameWidth);
+            const frameY = -(row * frameHeight);
+            
+            // 更新选中的小羊
+            if (selectedSheep) {
+                selectedSheep.element.style.backgroundPosition = `${frameX}px ${frameY}px`;
+                selectedSheep.element.style.transform = direction === 1 ? 'scaleX(-1)' : 'scaleX(1)';
+            }
+        }
+
+        // 更新状态显示
+        function updateStatus() {
+            // 简化状态更新，只在控制台输出调试信息
+            if (selectedSheep) {
+                console.log(`小羊状态 - ID: ${selectedSheep.id}, 帧: ${selectedSheep.currentFrame}, 速度: ${selectedSheep.walkSpeed.toFixed(1)}`);
+            }
+        }
+
+        // 移动小羊并更新动画
+        function moveSheep(deltaX, deltaY = 0) {
+            const newX = Math.max(0, Math.min(window.innerWidth - frameWidth, currentX + deltaX));
+            const newY = Math.max(0, Math.min(window.innerHeight - frameHeight, currentY + deltaY));
+            
+            // 计算实际移动距离
+            const actualDeltaX = newX - currentX;
+            const actualDeltaY = newY - currentY;
+            const distance = Math.sqrt(actualDeltaX * actualDeltaX + actualDeltaY * actualDeltaY);
+            
+            if (distance > 0) {
+                currentX = newX;
+                currentY = newY;
+                totalDistance += distance;
+                
+                // 根据移动方向更新朝向 - 修复方向逻辑
+                if (actualDeltaX > 0) {
+                    direction = 1; // 向右移动，不翻转
+                } else if (actualDeltaX < 0) {
+                    direction = -1; // 向左移动，翻转
+                }
+                
+                // 根据移动距离更新帧 - 更频繁的帧更新
+                const frameStep = Math.floor(totalDistance / frameDistance);
+                currentFrame = frameStep % 8;
+                
+                isWalking = true;
+                updateSheepPosition();
+                updateFrame();
+                updateStatus();
+                
+                // 停止移动后重置状态
+                clearTimeout(window.walkTimeout);
+                window.walkTimeout = setTimeout(() => {
+                    if (!isDragging && !isAutoWalking) {
+                        isWalking = false;
+                        updateStatus();
+                    }
+                }, 100);
+            }
+        }
+
+        // 自动行走
+        function startAutoWalk() {
+            if (autoWalkInterval) return;
+            
+            isAutoWalking = true;
+            autoWalkInterval = setInterval(() => {
+                const step = moveSpeed * direction;
+                
+                // 检查边界并从另一边出现
+                if (direction > 0) { // 向右移动
+                    currentX += step;
+                    if (currentX > window.innerWidth) {
+                        // 从左边出现
+                        currentX = -frameWidth;
+                    }
+                } else { // 向左移动
+                    currentX += step;
+                    if (currentX < -frameWidth) {
+                        // 从右边出现
+                        currentX = window.innerWidth;
+                    }
+                }
+                
+                // 更新位置和动画
+                totalDistance += Math.abs(step);
+                const frameStep = Math.floor(totalDistance / frameDistance);
+                currentFrame = frameStep % 8;
+                isWalking = true;
+                
+                updateSheepPosition();
+                updateFrame();
+                updateStatus();
+            }, 30);
+            
+            updateStatus();
+        }
+
+        function stopAutoWalk() {
+            if (autoWalkInterval) {
+                clearInterval(autoWalkInterval);
+                autoWalkInterval = null;
+            }
+            isAutoWalking = false;
+            updateStatus();
+        }
+
+        function toggleAutoWalk() {
+            if (isAutoWalking) {
+                stopAutoWalk();
+            } else {
+                startAutoWalk();
+            }
+        }
+
+        // 拖拽功能
+        function startDragging(e) {
+            if (!selectedSheep) return;
+            
+            isDragging = true;
+            selectedSheep.element.classList.add('dragging');
+            selectedSheep.element.style.cursor = 'grabbing';
+            stopAutoWalk();
+            
+            const rect = selectedSheep.element.getBoundingClientRect();
+            dragOffset.x = e.clientX - rect.left;
+            dragOffset.y = e.clientY - rect.top;
+            
+            updateStatus();
+        }
+
+        function stopDraggingSheep() {
+            if (selectedSheep && selectedSheep.isDragging) {
+                console.log('停止拖拽小羊:', selectedSheep.id);
+                selectedSheep.isDragging = false;
+                selectedSheep.element.classList.remove('dragging');
+                selectedSheep.element.style.cursor = 'grab';
+                
+                // 让小羊落回地面
+                dropSheepToGround(selectedSheep);
+                
+                updateMainSheepData();
+                updateStatus();
+            }
+        }
+
+        // 让小羊落回地面并继续跑动
+        function dropSheepToGround(sheepData) {
+            const groundY = 0; // 地面高度改为0
+            const currentY = sheepData.currentY;
+            
+            // 如果小羊在空中，让它落下
+            if (currentY > groundY + 20) { // 如果距离地面超过20像素
+                let velocity = 0; // 初始速度
+                const gravity = 0.8; // 重力加速度
+                const bounce = 0.6; // 弹跳系数
+                let bounceCount = 0; // 弹跳次数
+                
+                // 添加落下动画
+                const fallAnimation = () => {
+                    velocity += gravity; // 加速下落
+                    sheepData.currentY -= velocity;
+                    
+                    // 检查是否触地
+                    if (sheepData.currentY <= groundY) {
+                        sheepData.currentY = groundY;
+                        
+                        // 如果还有弹跳能量且弹跳次数少于3次
+                        if (Math.abs(velocity) > 2 && bounceCount < 3) {
+                            velocity = -velocity * bounce; // 反向弹跳
+                            bounceCount++;
+                        } else {
+                            // 停止弹跳，开始跑动
+                            velocity = 0;
+                            sheepData.currentY = groundY;
+                            sheepData.container.style.bottom = groundY + 'px';
+                            
+                            // 切换回行走动画并开始自动跑动
+                            updateSheepFrame(sheepData);
+                            startAutoWalkSheep(sheepData);
+                            return; // 结束动画
+                        }
+                    }
+                    
+                    // 更新位置
+                    sheepData.container.style.bottom = sheepData.currentY + 'px';
+                    
+                    // 继续动画
+                    requestAnimationFrame(fallAnimation);
+                };
+                
+                // 开始落下动画
+                requestAnimationFrame(fallAnimation);
+            } else {
+                // 如果已经在地面附近，直接开始跑动
+                sheepData.currentY = groundY;
+                sheepData.container.style.bottom = groundY + 'px';
+                updateSheepFrame(sheepData);
+                startAutoWalkSheep(sheepData);
+            }
+        }
+
+        function dragSheep(e) {
+            if (!selectedSheep || !selectedSheep.isDragging) return;
+            
+            e.preventDefault();
+            
+            // 计算新位置
+            const newX = e.clientX - dragOffset.x;
+            const newY = e.clientY - dragOffset.y;
+            
+            // 转换为底部坐标系
+            const bottomY = window.innerHeight - newY - frameHeight;
+            
+            // 直接更新位置
+            selectedSheep.container.style.left = newX + 'px';
+            selectedSheep.container.style.bottom = bottomY + 'px';
+            
+            // 更新内部坐标
+            selectedSheep.currentX = newX;
+            selectedSheep.currentY = bottomY;
+            
+            // 更新动画帧
+            selectedSheep.totalDistance += 5;
+            selectedSheep.currentFrame = Math.floor(selectedSheep.totalDistance / frameDistance) % 8;
+            updateSheepFrame(selectedSheep);
+            
+            updateMainSheepData();
+            updateStatus();
+        }
+
+        // 控制函数
+        function resetPosition() {
+            stopAutoWalk();
+            currentX = 50;
+            currentY = 0;
+            currentFrame = 0;
+            totalDistance = 0;
+            direction = 1;
+            isWalking = false;
+            
+            updateSheepPosition();
+            updateFrame();
+            updateStatus();
+        }
+
+        function toggleDirection() {
+            direction *= -1;
+            updateFrame();
+        }
+
+        function toggleSize() {
+            isLarge = !isLarge;
+            if (isLarge) {
+                frameWidth = 96; // 大尺寸时为96px
+                frameHeight = 96;
+                if (selectedSheep) {
+                    selectedSheep.element.style.width = '96px';
+                    selectedSheep.element.style.height = '96px';
+                    selectedSheep.element.style.backgroundSize = '768px 192px';
+                }
+            } else {
+                frameWidth = 64; // 正常尺寸为64px
+                frameHeight = 64;
+                if (selectedSheep) {
+                    selectedSheep.element.style.width = '64px';
+                    selectedSheep.element.style.height = '64px';
+                    selectedSheep.element.style.backgroundSize = '512px 128px';
+                }
+            }
+            if (selectedSheep) {
+                updateFrame();
+            }
+        }
+
+        function showFrameInfo() {
+            if (selectedSheep) {
+                alert(`当前小羊信息：
+ID: ${selectedSheep.id}
+帧数: ${selectedSheep.currentFrame}/7
+状态: ${selectedSheep.isDragging ? '拖拽' : (selectedSheep.isAutoWalking ? '自动行走' : '待机')}
+位置: (${Math.round(selectedSheep.currentX)}, ${Math.round(selectedSheep.currentY)})
+方向: ${selectedSheep.direction > 0 ? '右→' : '左←'} (${selectedSheep.direction})
+行走速度: ${selectedSheep.walkSpeed.toFixed(1)}
+总移动距离: ${Math.round(selectedSheep.totalDistance)}px
+帧距离: ${frameDistance}px/帧`);
+            } else {
+                alert('请先点击选择一只小羊！');
+            }
+        }
+
+        // 自动检测精灵图
+        function detectSpriteSheet() {
+            const img = new Image();
+            img.onload = function() {
+                const detectedFrameWidth = this.width / 8;
+                const detectedFrameHeight = this.height / 2;
+                
+                if (!isLarge) {
+                    frameWidth = detectedFrameWidth; // 恢复原始大小检测
+                    frameHeight = detectedFrameHeight; // 恢复原始大小检测
+                    
+                    // 更新所有小羊的大小
+                    allSheep.forEach(sheepData => {
+                        sheepData.element.style.width = frameWidth + 'px';
+                        sheepData.element.style.height = frameHeight + 'px';
+                        sheepData.element.style.backgroundSize = `${this.width}px ${this.height}px`;
+                    });
+                }
+                
+                console.log(`检测到精灵图: ${this.width}x${this.height}, 每帧: ${frameWidth}x${frameHeight}`);
+                updateFrame();
+            };
+            img.src = 'image.png';
+        }
+
+        // 动态调整小羊大小
+        function adjustSheepSizeForDevice() {
+            const screenWidth = window.innerWidth;
+            let scaleFactor = 1;
+            
+            if (screenWidth <= 480) {
+                scaleFactor = 0.6; // 超小屏幕
+                frameWidth = 64 * scaleFactor;
+                frameHeight = 64 * scaleFactor;
+            } else if (screenWidth <= 768) {
+                scaleFactor = 0.75; // 平板和手机
+                frameWidth = 64 * scaleFactor;
+                frameHeight = 64 * scaleFactor;
+            } else {
+                scaleFactor = 1; // 桌面
+                frameWidth = 64;
+                frameHeight = 64;
+            }
+            
+            // 更新所有小羊的大小
+            allSheep.forEach(sheepData => {
+                sheepData.element.style.width = frameWidth + 'px';
+                sheepData.element.style.height = frameHeight + 'px';
+                sheepData.element.style.backgroundSize = `${512 * scaleFactor}px ${128 * scaleFactor}px`;
+            });
+            
+            console.log(`屏幕宽度: ${screenWidth}px, 缩放因子: ${scaleFactor}, 小羊大小: ${frameWidth}x${frameHeight}`);
+        }
+
+        // 更新抓羊计数器
+        function updateCatchCounter() {
+            const counterElement = document.getElementById('catchCount');
+            const containerElement = document.getElementById('catchCounter');
+            
+            if (counterElement) {
+                counterElement.textContent = catchCount;
+            }
+            
+            // 添加抓羊动画效果
+            if (containerElement) {
+                containerElement.classList.add('catch-animation');
+                setTimeout(() => {
+                    containerElement.classList.remove('catch-animation');
+                }, 500);
+            }
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('load', function() {
+            detectSpriteSheet();
+            adjustSheepSizeForDevice(); // 调整小羊大小
+            init();
+        });
+
+        // 全局拖拽事件监听
+        document.addEventListener('mousemove', function(e) {
+            if (selectedSheep && selectedSheep.isDragging) {
+                e.preventDefault();
+                
+                // 计算新位置
+                const newX = e.clientX - dragOffset.x;
+                const newY = e.clientY - dragOffset.y;
+                
+                // 转换为底部坐标系
+                const bottomY = window.innerHeight - newY - frameHeight;
+                
+                // 直接更新位置
+                selectedSheep.container.style.left = newX + 'px';
+                selectedSheep.container.style.bottom = bottomY + 'px';
+                
+                // 更新内部坐标
+                selectedSheep.currentX = newX;
+                selectedSheep.currentY = bottomY;
+                
+                // 更新动画帧
+                selectedSheep.totalDistance += 5;
+                selectedSheep.currentFrame = Math.floor(selectedSheep.totalDistance / frameDistance) % 8;
+                updateSheepFrame(selectedSheep);
+                
+                updateMainSheepData();
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (selectedSheep && selectedSheep.isDragging) {
+                console.log('停止拖拽小羊:', selectedSheep.id);
+                selectedSheep.isDragging = false;
+                selectedSheep.element.classList.remove('dragging');
+                selectedSheep.element.style.cursor = 'grab';
+                
+                // 让小羊落回地面
+                dropSheepToGround(selectedSheep);
+                
+                updateMainSheepData();
+            }
+        });
+
+        // 窗口大小改变时调整位置和大小
+        window.addEventListener('resize', function() {
+            adjustSheepSizeForDevice(); // 重新调整小羊大小
+            
+            // 调整小羊位置，确保不超出边界
+            allSheep.forEach(sheepData => {
+                sheepData.currentX = Math.min(sheepData.currentX, window.innerWidth - frameWidth);
+                sheepData.currentY = Math.max(0, Math.min(sheepData.currentY, window.innerHeight - frameHeight));
+                updateSheepPosition(sheepData);
+            });
+            
+            if (selectedSheep) {
+                currentX = Math.min(currentX, window.innerWidth - frameWidth);
+                currentY = Math.max(0, Math.min(currentY, window.innerHeight - frameHeight));
+                updateSheepPosition();
+            }
+        });
+
+        // 创建多只小羊
+        function createSheep() {
+            console.log('createSheep 函数开始执行...');
+            
+            // 清除现有小羊
+            allSheep.forEach(sheepData => {
+                if (sheepData.container) {
+                    sheepData.container.remove();
+                }
+            });
+            allSheep = [];
+            
+            console.log('准备创建', sheepCount, '只小羊');
+            
+            // 创建新的小羊
+            for (let i = 0; i < sheepCount; i++) {
+                console.log('创建第', i + 1, '只小羊...');
+                
+                const container = document.createElement('div');
+                container.className = 'sheep-container';
+                container.style.position = 'absolute';
+                container.style.bottom = '0'; // 改为底部
+                
+                // 随机位置
+                const randomX = Math.random() * (window.innerWidth - frameWidth);
+                container.style.left = randomX + 'px';
+                container.style.transition = 'none';
+                
+                const sheepElement = document.createElement('div');
+                sheepElement.className = 'sheep';
+                sheepElement.style.width = frameWidth + 'px';
+                sheepElement.style.height = frameHeight + 'px';
+                sheepElement.style.backgroundImage = "url('image.png')";
+                sheepElement.style.backgroundRepeat = 'no-repeat';
+                sheepElement.style.backgroundSize = `${8 * frameWidth}px ${2 * frameHeight}px`; // 动态计算 backgroundSize
+                sheepElement.style.backgroundPosition = '0 0';
+                sheepElement.style.filter = 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))';
+                sheepElement.style.cursor = 'grab';
+                sheepElement.style.transition = 'transform 0.1s ease';
+                sheepElement.style.userSelect = 'none';
+                
+                container.appendChild(sheepElement);
+                
+                const scene = document.querySelector('.scene');
+                if (scene) {
+                    scene.appendChild(container);
+                    console.log('小羊', i + 1, '已添加到场景');
+                } else {
+                    console.error('找不到 .scene 元素！');
+                }
+                
+                // 创建小羊数据
+                const sheepData = {
+                    id: i,
+                    container: container,
+                    element: sheepElement,
+                    currentX: randomX,
+                    currentY: 0,
+                    currentFrame: 0,
+                    direction: 1, // 所有小羊都向右走
+                    totalDistance: 0,
+                    isWalking: false,
+                    isDragging: false,
+                    isAutoWalking: false,
+                    autoWalkInterval: null,
+                    color: `hue-rotate(${i * 60}deg)`, // 不同颜色
+                    walkSpeed: 4.5 + Math.random() * 4 // 随机速度 4.5-8.5，最慢4.5
+                };
+                
+                // 应用颜色滤镜
+                sheepElement.style.filter += ` ${sheepData.color}`;
+                
+                // 重要：立即设置正确的动画帧显示
+                updateSheepFrame(sheepData);
+                
+                // 添加事件监听
+                sheepElement.addEventListener('mousedown', (e) => {
+                    console.log('点击小羊:', i);
+                    startDraggingSheep(e, sheepData);
+                });
+                
+                sheepElement.addEventListener('touchstart', (e) => {
+                    console.log('触摸小羊:', i);
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    startDraggingSheep({
+                        preventDefault: () => {},
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    }, sheepData);
+                });
+                
+                allSheep.push(sheepData);
+                console.log('小羊', i + 1, '数据已添加到数组，当前数组长度:', allSheep.length);
+                
+                // 自动开始行走
+                startAutoWalkSheep(sheepData);
+                console.log('小羊', i + 1, '开始自动行走');
+            }
+            
+            // 设置第一只为选中状态
+            if (allSheep.length > 0) {
+                selectedSheep = allSheep[0];
+                updateMainSheepData();
+                console.log('设置第一只小羊为选中状态');
+            }
+            
+            console.log('createSheep 函数执行完成，总共创建了', allSheep.length, '只小羊');
+        }
+
+        // 更新主要小羊数据（用于UI显示）
+        function updateMainSheepData() {
+            if (selectedSheep) {
+                currentX = selectedSheep.currentX;
+                currentY = selectedSheep.currentY;
+                currentFrame = selectedSheep.currentFrame;
+                direction = selectedSheep.direction;
+                totalDistance = selectedSheep.totalDistance;
+                isDragging = selectedSheep.isDragging;
+                isWalking = selectedSheep.isWalking;
+                isAutoWalking = selectedSheep.isAutoWalking;
+            }
+        }
+
+        // 移动指定小羊
+        function moveSheepData(sheepData, deltaX, deltaY = 0) {
+            const newX = Math.max(0, Math.min(window.innerWidth - frameWidth, sheepData.currentX + deltaX));
+            const newY = Math.max(0, Math.min(window.innerHeight - frameHeight, sheepData.currentY + deltaY));
+            
+            const actualDeltaX = newX - sheepData.currentX;
+            const actualDeltaY = newY - sheepData.currentY;
+            const distance = Math.sqrt(actualDeltaX * actualDeltaX + actualDeltaY * actualDeltaY);
+            
+            if (distance > 0) {
+                sheepData.currentX = newX;
+                sheepData.currentY = newY;
+                sheepData.totalDistance += distance;
+                
+                // 根据移动方向更新朝向 - 使用反转的方向逻辑
+                if (actualDeltaX > 0) {
+                    sheepData.direction = 1; // 向右移动
+                } else if (actualDeltaX < 0) {
+                    sheepData.direction = -1; // 向左移动
+                }
+                
+                // 根据移动距离更新帧
+                const frameStep = Math.floor(sheepData.totalDistance / frameDistance);
+                sheepData.currentFrame = frameStep % 8;
+                
+                sheepData.isWalking = true;
+                updateSheepPosition(sheepData);
+                updateSheepFrame(sheepData);
+                
+                // 如果是选中的小羊，更新UI
+                if (selectedSheep === sheepData) {
+                    updateMainSheepData();
+                    updateStatus();
+                }
+                
+                // 停止移动后重置状态
+                clearTimeout(sheepData.walkTimeout);
+                sheepData.walkTimeout = setTimeout(() => {
+                    if (!sheepData.isDragging && !sheepData.isAutoWalking) {
+                        sheepData.isWalking = false;
+                        if (selectedSheep === sheepData) {
+                            updateMainSheepData();
+                            updateStatus();
+                        }
+                    }
+                }, 100);
+            }
+        }
+
+        // 更新小羊动画帧
+        function updateSheepFrame(sheepData) {
+            const row = sheepData.isDragging ? 1 : 0;
+            const frameX = -(sheepData.currentFrame * frameWidth);
+            const frameY = -(row * frameHeight);
+            
+            sheepData.element.style.backgroundPosition = `${frameX}px ${frameY}px`;
+            sheepData.element.style.transform = sheepData.direction === 1 ? 'scaleX(-1)' : 'scaleX(1)';
+        }
+
+        // 拖拽指定小羊
+        function startDraggingSheep(e, sheepData) {
+            e.preventDefault();
+            selectedSheep = sheepData;
+            sheepData.isDragging = true;
+            sheepData.element.classList.add('dragging');
+            sheepData.element.style.cursor = 'grabbing';
+            stopAutoWalkSheep(sheepData);
+            
+            const rect = sheepData.element.getBoundingClientRect();
+            dragOffset.x = e.clientX - rect.left;
+            dragOffset.y = e.clientY - rect.top;
+            
+            // 立即切换到拖拽动画（下排）
+            updateSheepFrame(sheepData);
+            
+            // 增加抓羊计数
+            catchCount++;
+            updateCatchCounter();
+            
+            updateMainSheepData();
+            updateStatus();
+            
+            console.log('开始拖拽小羊:', sheepData.id, '总抓羊次数:', catchCount);
+        }
+
+        function stopAutoWalkSheep(sheepData) {
+            if (sheepData.autoWalkInterval) {
+                clearInterval(sheepData.autoWalkInterval);
+                sheepData.autoWalkInterval = null;
+            }
+            sheepData.isAutoWalking = false;
+        }
+
+        // 自动行走指定小羊
+        function startAutoWalkSheep(sheepData) {
+            if (sheepData.autoWalkInterval) return;
+            
+            sheepData.isAutoWalking = true;
+            sheepData.autoWalkInterval = setInterval(() => {
+                const step = sheepData.walkSpeed; // 只向右走，不需要乘以direction
+                
+                // 向右移动
+                sheepData.currentX += step;
+                
+                // 检查右边界，从左边出现
+                if (sheepData.currentX > window.innerWidth) {
+                    sheepData.currentX = -frameWidth;
+                }
+                
+                // 更新位置和动画
+                sheepData.totalDistance += Math.abs(step);
+                const frameStep = Math.floor(sheepData.totalDistance / frameDistance);
+                sheepData.currentFrame = frameStep % 8;
+                sheepData.isWalking = true;
+                
+                updateSheepPosition(sheepData);
+                updateSheepFrame(sheepData);
+            }, 30);
+        }
+    </script>
+</body>
+</html> 

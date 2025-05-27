@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import Image from "next/image"
+import Link from "next/link"
 
 interface ClickEffect {
   id: number
@@ -29,6 +30,18 @@ export default function AngelZhengJYWebsite() {
   const [magicParticles, setMagicParticles] = useState<MagicParticle[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
   const [loadingProgress, setLoadingProgress] = useState(0)
+
+  // 添加滚动到指定section的函数
+  const scrollToSection = (sectionId: string) => {
+    setActiveSection(sectionId)
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
+  }
 
   useEffect(() => {
     // Loading animation
@@ -95,25 +108,25 @@ export default function AngelZhengJYWebsite() {
       name: "晨光小兔",
       price: "¥398",
       description: "小白兔在晨光中跳跃，织入温柔的梦境色彩",
-      image: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=300&h=300&fit=crop&crop=center",
+      image: "/images/scarf-rabbit.jpg",
     },
     {
       name: "星夜小鹿",
       price: "¥428",
       description: "星空下的小鹿轻盈漫步，诉说夜的浪漫秘密",
-      image: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=300&h=300&fit=crop&crop=center",
+      image: "/images/scarf-deer.jpg",
     },
     {
       name: "花语小鸟",
       price: "¥368",
       description: "彩色小鸟在花丛中歌唱春天的甜美故事",
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=300&fit=crop&crop=center",
+      image: "/images/scarf-bird.jpg",
     },
     {
       name: "月影小狐",
       price: "¥458",
       description: "月光下的小狐狸编织着银色的浪漫梦境",
-      image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=300&h=300&fit=crop&crop=center",
+      image: "/images/scarf-fox.jpg",
     },
   ]
 
@@ -253,13 +266,13 @@ export default function AngelZhengJYWebsite() {
       <nav
         className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-1000 animate-nav-entrance ${
           isScrolled ? "backdrop-blur-xl bg-white/70" : "backdrop-blur-lg bg-white/50"
-        } rounded-full px-10 py-5 border-2 border-[#d4a5a0]/40 shadow-xl hover:shadow-2xl transition-shadow duration-500 relative overflow-hidden`}
+        } rounded-full px-4 md:px-10 py-3 md:py-5 border-2 border-[#d4a5a0]/40 shadow-xl hover:shadow-2xl transition-shadow duration-500 relative overflow-hidden max-w-[95vw]`}
       >
         {/* Ornate nav decoration */}
         <div className="absolute top-2 left-4 w-4 h-4 bg-gradient-to-r from-[#d4a5a0] to-[#c8b8d5] rounded-full opacity-60 animate-nav-ornate"></div>
         <div className="absolute top-2 right-4 w-4 h-4 bg-gradient-to-r from-[#b8c4a8] to-[#d4c4a8] rounded-full opacity-60 animate-nav-ornate-delayed"></div>
 
-        <div className="flex items-center space-x-10">
+        <div className="flex items-center space-x-3 md:space-x-10 overflow-x-auto scrollbar-hide">
           {[
             { name: "首页", id: "home" },
             { name: "精选丝巾", id: "products" },
@@ -269,22 +282,42 @@ export default function AngelZhengJYWebsite() {
           ].map((item, index) => (
             <button
               key={item.id}
-              onClick={() => setActiveSection(item.id)}
-              className="group flex items-center space-x-3 text-[#a89688] hover:text-[#9a8d7d] transition-all duration-700 hover:scale-110 relative animate-nav-item"
+              onClick={() => scrollToSection(item.id)}
+              className="group flex items-center space-x-2 md:space-x-3 text-[#a89688] hover:text-[#9a8d7d] transition-all duration-700 hover:scale-110 relative animate-nav-item whitespace-nowrap flex-shrink-0"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative">
-                <div className="w-5 h-5 border-2 border-current rounded-full group-hover:animate-nav-icon-spin transition-all duration-700 relative">
+                <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-current rounded-full group-hover:animate-nav-icon-spin transition-all duration-700 relative">
                   <div className="absolute inset-0.5 bg-current rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="absolute inset-0 border border-[#d4c4a8] rounded-full opacity-0 group-hover:opacity-60 animate-nav-icon-ornate"></div>
                 </div>
               </div>
-              <span className="text-base font-medium group-hover:animate-nav-text-wave tracking-wide baroque-font">
+              <span className="text-sm md:text-base font-medium group-hover:animate-nav-text-wave tracking-wide baroque-font">
                 {item.name}
               </span>
               <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4a5a0] via-[#c8b8d5] to-[#b8c4a8] scale-x-0 group-hover:scale-x-100 transition-transform duration-700 rounded-full"></div>
             </button>
           ))}
+          
+          {/* 快来数羊链接 */}
+          <Link
+            href="/sheep"
+            className="group flex items-center space-x-2 md:space-x-3 text-[#a89688] hover:text-[#9a8d7d] transition-all duration-700 hover:scale-110 relative animate-nav-item whitespace-nowrap flex-shrink-0"
+            style={{ animationDelay: `${5 * 0.1}s` }}
+          >
+            <div className="relative">
+              <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-current rounded-full group-hover:animate-nav-icon-spin transition-all duration-700 relative">
+                <div className="absolute inset-0.5 bg-current rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 border border-[#d4c4a8] rounded-full opacity-0 group-hover:opacity-60 animate-nav-icon-ornate"></div>
+                {/* 小羊图标 */}
+                <div className="absolute inset-1 text-xs flex items-center justify-center">🐑</div>
+              </div>
+            </div>
+            <span className="text-sm md:text-base font-medium group-hover:animate-nav-text-wave tracking-wide baroque-font">
+              快来数羊
+            </span>
+            <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4a5a0] via-[#c8b8d5] to-[#b8c4a8] scale-x-0 group-hover:scale-x-100 transition-transform duration-700 rounded-full"></div>
+          </Link>
         </div>
       </nav>
 
@@ -299,9 +332,8 @@ export default function AngelZhengJYWebsite() {
 
         <div className="text-center z-10 max-w-6xl mx-auto px-6">
           <div className="relative">
-            {/* Enhanced Ornate Border */}
-            <div className="absolute -inset-16 border-6 border-[#d4a5a0]/30 rounded-3xl animate-hero-border-symphony"></div>
-            <div className="absolute -inset-12 border-4 border-[#c8b8d5]/40 rounded-2xl animate-hero-border-symphony-reverse"></div>
+            {/* Enhanced Ornate Border - 移除旋转动画 */}
+            <div className="absolute -inset-16 border-6 border-[#d4a5a0]/30 rounded-3xl"></div>
             <div className="absolute -inset-8 border-2 border-[#b8c4a8]/30 rounded-xl animate-hero-inner-glow"></div>
 
             <div className="bg-white/50 backdrop-blur-xl rounded-3xl p-20 border-2 border-white/60 relative overflow-hidden animate-hero-content-entrance">
@@ -331,7 +363,7 @@ export default function AngelZhengJYWebsite() {
               {/* Enhanced Title */}
               <div className="relative mb-12 animate-title-entrance">
                 <h1 className="text-7xl md:text-9xl font-bold baroque-title-font text-transparent bg-gradient-to-r from-[#a89688] via-[#9a8d7d] via-[#c0b0a0] to-[#a89688] bg-clip-text animate-title-symphony bg-size-200">
-                  AngelZhengJY
+                  Angel
                 </h1>
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-10 h-10 animate-title-crown">
                   <div className="w-full h-full border-3 border-[#9a8d7d] rounded-full relative">
@@ -347,43 +379,6 @@ export default function AngelZhengJYWebsite() {
                 <div className="absolute -bottom-4 right-1/4 w-6 h-6 animate-title-ornate-delayed">
                   <div className="w-full h-full border-2 border-[#c8b8d5] rounded-full relative">
                     <div className="absolute inset-1 bg-[#d4a5a0] rounded-full"></div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Enhanced Subtitle */}
-              <div className="flex items-center justify-center space-x-8 mb-12 animate-subtitle-entrance">
-                <div className="w-8 h-8 animate-subtitle-ornate">
-                  <div className="w-full h-full bg-gradient-to-r from-[#d4a5a0] to-[#c8b8d5] rounded-full relative">
-                    <div className="absolute inset-1 border-2 border-white rounded-full"></div>
-                    <div className="absolute top-0 left-1/2 w-0.5 h-2 bg-[#d4c4a8] transform -translate-x-1/2"></div>
-                  </div>
-                </div>
-                <div className="w-6 h-6 animate-subtitle-ornate-small">
-                  <div className="w-full h-full border-2 border-[#c4a898] transform rotate-45 relative">
-                    <div className="absolute inset-1 bg-[#e5c8c5] transform -rotate-45"></div>
-                  </div>
-                </div>
-                <div className="relative">
-                  <p className="text-4xl md:text-5xl text-transparent bg-gradient-to-r from-[#9a8d7d] via-[#c4a898] via-[#c0b0a0] to-[#a89688] bg-clip-text font-bold italic baroque-script-font animate-subtitle-flow bg-size-200">
-                    "轻柔，是我表达爱的方式"
-                  </p>
-                  <div className="absolute -top-2 -left-2 w-4 h-4 animate-quote-ornate">
-                    <div className="w-full h-full bg-gradient-to-r from-[#d4a5a0] to-[#c8b8d5] rounded-full"></div>
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 w-4 h-4 animate-quote-ornate-delayed">
-                    <div className="w-full h-full bg-gradient-to-r from-[#c4a898] to-[#e5c8c5] rounded-full"></div>
-                  </div>
-                </div>
-                <div className="w-6 h-6 animate-subtitle-ornate-small-delayed">
-                  <div className="w-full h-full border-2 border-[#b8c4a8] transform rotate-45 relative">
-                    <div className="absolute inset-1 bg-[#c8b8d5] transform -rotate-45"></div>
-                  </div>
-                </div>
-                <div className="w-8 h-8 animate-subtitle-ornate-delayed">
-                  <div className="w-full h-full bg-gradient-to-r from-[#c8b8d5] to-[#c0b0a0] rounded-full relative">
-                    <div className="absolute inset-1 border-2 border-white rounded-full"></div>
-                    <div className="absolute bottom-0 left-1/2 w-0.5 h-2 bg-[#d4c4a8] transform -translate-x-1/2"></div>
                   </div>
                 </div>
               </div>
@@ -506,7 +501,7 @@ export default function AngelZhengJYWebsite() {
                       alt={product.name}
                       width={300}
                       height={300}
-                      className="w-full h-52 object-cover group-hover:scale-115 transition-transform duration-1000"
+                      className="w-full h-52 object-cover group-hover:scale-115 transition-transform duration-1000 aspect-square"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#d4a5a0]/30 via-transparent to-[#c8b8d5]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
 
@@ -691,11 +686,12 @@ export default function AngelZhengJYWebsite() {
               <div className="absolute inset-0 bg-gradient-to-br from-[#d4a5a0]/40 via-[#c8b8d5]/30 to-[#b8c4a8]/40 rounded-2xl blur-3xl animate-stories-image-aura"></div>
               <div className="relative z-10">
                 <Image
-                  src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=700&fit=crop&crop=center"
+                  src="/images/inspiration-main.jpg"
                   alt="Ornate Inspiration"
                   width={600}
                   height={700}
-                  className="w-full rounded-2xl shadow-2xl border-4 border-white/60"
+                  className="w-full rounded-2xl shadow-2xl border-4 border-white/60 object-cover"
+                  style={{ aspectRatio: '6/7' }}
                 />
                 {/* Enhanced Floating Elements on Image */}
                 <div className="absolute top-6 left-6 w-8 h-8 animate-stories-image-ornate">
@@ -730,11 +726,11 @@ export default function AngelZhengJYWebsite() {
               <div className="absolute inset-0 bg-gradient-to-br from-[#c8b8d5]/50 via-[#e5c8c5]/40 to-[#d4a5a0]/50 rounded-full blur-3xl animate-about-portrait-aura"></div>
               <div className="relative z-10">
                 <Image
-                  src="https://images.unsplash.com/photo-1494790108755-2616c9c9b8d4?w=600&h=600&fit=crop&crop=center"
+                  src="/images/angel-portrait.jpg"
                   alt="Angel Ornate Portrait"
                   width={600}
                   height={600}
-                  className="w-full rounded-full shadow-2xl border-6 border-white/60"
+                  className="w-full rounded-full shadow-2xl border-6 border-white/60 object-cover aspect-square"
                 />
                 {/* Enhanced Elements Around Portrait */}
                 <div className="absolute top-10 left-10 w-12 h-12 animate-about-portrait-ornate">
