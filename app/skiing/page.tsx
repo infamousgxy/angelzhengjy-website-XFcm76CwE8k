@@ -105,6 +105,14 @@ function SnowBored() {
   const [gameTime, setGameTime] = useState(0)
   const [gameOver, setGameOver] = useState(false)
   const [showWelcomeModal, setShowWelcomeModal] = useState(true)
+  const hasShownWelcomeRef = useRef(false) // 用于记录是否已经显示过欢迎弹窗
+  
+  // 存储已加载的精灵
+  const spritesRef = useRef<{
+    treeSprites: HTMLImageElement[]
+    snowmanSprites: HTMLImageElement[]
+    getRandomObstacleSprite: () => HTMLImageElement
+  } | null>(null)
   
   const gameStateRef = useRef({
     player: {
@@ -124,6 +132,57 @@ function SnowBored() {
     score: 0,
     isGameOver: false
   })
+
+  // 重启游戏函数
+  const restartGame = () => {
+    const currentTime = Date.now()
+    
+    // 重置游戏状态
+    gameStateRef.current = {
+      player: {
+        x: 100,
+        y: GAME_CONSTANTS.CANVAS_HEIGHT / 2,
+        velocityY: 0,
+        isMovingUp: false,
+        sprite: gameStateRef.current.player.sprite // 保持已加载的精灵
+      },
+      obstacles: [],
+      trailPoints: [],
+      frameCount: 0,
+      startTime: currentTime, // 使用当前时间重置开始时间
+      gameSpeedMultiplier: 1,
+      obstacleGenerationInterval: GAME_CONSTANTS.TREE_GENERATION_INTERVAL,
+      lastSpeedIncreaseTime: currentTime, // 重置最后速度增加时间
+      score: 0,
+      isGameOver: false
+    }
+    
+    // 重新生成初始障碍物
+    if (spritesRef.current) {
+      for (let i = 0; i < 6; i++) {
+        gameStateRef.current.obstacles.push({
+          x: Math.random() * GAME_CONSTANTS.CANVAS_WIDTH,
+          y: Math.random() * (GAME_CONSTANTS.CANVAS_HEIGHT - 100) + 50,
+          sprite: spritesRef.current.getRandomObstacleSprite()
+        })
+      }
+    }
+    
+    // 重置React状态
+    setScore(0)
+    setGameTime(0)
+    setGameOver(false)
+    // 不重置弹窗状态，因为我们不想再次显示弹窗
+  }
+
+  // 关闭欢迎弹窗的处理函数
+  const handleCloseWelcomeModal = () => {
+    setShowWelcomeModal(false)
+    hasShownWelcomeRef.current = true // 标记已经显示过弹窗
+  }
+
+  // 检查是否应该显示弹窗（只在第一次进入页面时显示）
+  const shouldShowWelcomeModal = showWelcomeModal && !hasShownWelcomeRef.current
 
   // 鼠标和触摸事件处理
   const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
@@ -185,6 +244,13 @@ function SnowBored() {
         const useTree = Math.random() > 0.3
         const sprites = useTree ? treeSprites : snowmanSprites
         return sprites[Math.floor(Math.random() * sprites.length)]
+      }
+
+      // 保存精灵到ref中
+      spritesRef.current = {
+        treeSprites,
+        snowmanSprites,
+        getRandomObstacleSprite
       }
 
       for (let i = 0; i < 6; i++) {
@@ -319,7 +385,7 @@ function SnowBored() {
           gameStateRef.current.obstacles.push({
             x: GAME_CONSTANTS.CANVAS_WIDTH + 50,
             y: Math.random() * (GAME_CONSTANTS.CANVAS_HEIGHT - 100) + 50,
-            sprite: getRandomObstacleSprite()
+            sprite: spritesRef.current?.getRandomObstacleSprite() || gameStateRef.current.obstacles[0]?.sprite
           })
         }
 
@@ -360,9 +426,10 @@ function SnowBored() {
     initGame()
 
     return () => {
-      // 清理函数，不再需要移除键盘事件监听器
+      // 清理函数，取消动画帧请求
+      // 这里我们应该存储animationFrameId并在清理时取消
     }
-  }, [gameOver, gameTime])
+  }, []) // 移除依赖项，只在组件挂载时初始化一次
 
   return (
     <div 
@@ -374,8 +441,8 @@ function SnowBored() {
     >
       {/* 温馨提醒弹窗 */}
       <WelcomeModal 
-        isOpen={showWelcomeModal} 
-        onClose={() => setShowWelcomeModal(false)} 
+        isOpen={shouldShowWelcomeModal} 
+        onClose={handleCloseWelcomeModal} 
       />
       
       <h1 className={`text-4xl font-bold mb-4 ${gameOver ? 'text-red-500' : 'text-white'}`} style={{ fontFamily: '"Press Start 2P", cursive' }}>
@@ -398,7 +465,7 @@ function SnowBored() {
           <div className="absolute inset-0 flex items-center justify-center bg-black/75">
             <div className="text-white text-center">
               <button
-                onClick={() => window.location.reload()}
+                onClick={restartGame}
                 className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 font-pixel"
                 style={{ fontFamily: '"Press Start 2P", cursive' }}
               >
