@@ -107,6 +107,13 @@ function SnowBored() {
   const [showWelcomeModal, setShowWelcomeModal] = useState(true)
   const hasShownWelcomeRef = useRef(false) // 用于记录是否已经显示过欢迎弹窗
   
+  // 动态游戏尺寸状态
+  const [gameSize, setGameSize] = useState({
+    width: 800,
+    height: 400,
+    scale: 1
+  })
+  
   // 存储已加载的精灵
   const spritesRef = useRef<{
     treeSprites: HTMLImageElement[]
@@ -114,10 +121,27 @@ function SnowBored() {
     getRandomObstacleSprite: () => HTMLImageElement
   } | null>(null)
   
+  // 动态游戏常量
+  const getDynamicConstants = () => {
+    const scale = gameSize.scale
+    return {
+      CANVAS_WIDTH: gameSize.width,
+      CANVAS_HEIGHT: gameSize.height,
+      SLOPE_ANGLE: 15,
+      MOVEMENT_SPEED: 1.5 * scale,
+      TREE_GENERATION_INTERVAL: Math.floor(120 / scale),
+      GRAVITY: 0.2 * scale,
+      PLAYER_WIDTH: Math.floor(32 * scale),
+      PLAYER_HEIGHT: Math.floor(32 * scale),
+      OBSTACLE_WIDTH: Math.floor(32 * scale),
+      OBSTACLE_HEIGHT: Math.floor(48 * scale)
+    }
+  }
+  
   const gameStateRef = useRef({
     player: {
       x: 100,
-      y: GAME_CONSTANTS.CANVAS_HEIGHT / 2,
+      y: gameSize.height / 2,
       velocityY: 0,
       isMovingUp: false,
       sprite: null as HTMLImageElement | null
@@ -127,21 +151,66 @@ function SnowBored() {
     frameCount: 0,
     startTime: Date.now(),
     gameSpeedMultiplier: 1,
-    obstacleGenerationInterval: GAME_CONSTANTS.TREE_GENERATION_INTERVAL,
-    lastSpeedIncreaseTime: 0,
+    obstacleGenerationInterval: 120,
+    lastSpeedIncreaseTime: Date.now(),
     score: 0,
     isGameOver: false
   })
 
+  // 计算适合的游戏尺寸
+  const calculateGameSize = () => {
+    const maxWidth = Math.min(window.innerWidth - 32, 800) // 减去padding
+    const maxHeight = Math.min(window.innerHeight * 0.5, 400) // 最多占屏幕高度的50%
+    
+    // 保持16:8的宽高比
+    const aspectRatio = 2
+    let width = maxWidth
+    let height = width / aspectRatio
+    
+    // 如果高度超过最大高度，则以高度为准
+    if (height > maxHeight) {
+      height = maxHeight
+      width = height * aspectRatio
+    }
+    
+    // 确保最小尺寸
+    width = Math.max(width, 320)
+    height = Math.max(height, 160)
+    
+    const scale = width / 800 // 相对于原始尺寸的缩放比例
+    
+    return { width: Math.floor(width), height: Math.floor(height), scale }
+  }
+
+  // 监听窗口尺寸变化
+  useEffect(() => {
+    const handleResize = () => {
+      const newSize = calculateGameSize()
+      setGameSize(newSize)
+      
+      // 更新游戏状态中的玩家位置
+      if (gameStateRef.current.player) {
+        gameStateRef.current.player.y = newSize.height / 2
+      }
+    }
+
+    // 初始化尺寸
+    handleResize()
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   // 重启游戏函数
   const restartGame = () => {
     const currentTime = Date.now()
+    const constants = getDynamicConstants()
     
     // 重置游戏状态
     gameStateRef.current = {
       player: {
-        x: 100,
-        y: GAME_CONSTANTS.CANVAS_HEIGHT / 2,
+        x: 100 * gameSize.scale,
+        y: gameSize.height / 2,
         velocityY: 0,
         isMovingUp: false,
         sprite: gameStateRef.current.player.sprite // 保持已加载的精灵
@@ -151,7 +220,7 @@ function SnowBored() {
       frameCount: 0,
       startTime: currentTime, // 使用当前时间重置开始时间
       gameSpeedMultiplier: 1,
-      obstacleGenerationInterval: GAME_CONSTANTS.TREE_GENERATION_INTERVAL,
+      obstacleGenerationInterval: constants.TREE_GENERATION_INTERVAL,
       lastSpeedIncreaseTime: currentTime, // 重置最后速度增加时间
       score: 0,
       isGameOver: false
@@ -161,8 +230,8 @@ function SnowBored() {
     if (spritesRef.current) {
       for (let i = 0; i < 6; i++) {
         gameStateRef.current.obstacles.push({
-          x: Math.random() * GAME_CONSTANTS.CANVAS_WIDTH,
-          y: Math.random() * (GAME_CONSTANTS.CANVAS_HEIGHT - 100) + 50,
+          x: Math.random() * gameSize.width,
+          y: Math.random() * (gameSize.height - 100 * gameSize.scale) + 50 * gameSize.scale,
           sprite: spritesRef.current.getRandomObstacleSprite()
         })
       }
@@ -255,19 +324,21 @@ function SnowBored() {
 
       for (let i = 0; i < 6; i++) {
         gameStateRef.current.obstacles.push({
-          x: Math.random() * GAME_CONSTANTS.CANVAS_WIDTH,
-          y: Math.random() * (GAME_CONSTANTS.CANVAS_HEIGHT - 100) + 50,
+          x: Math.random() * gameSize.width,
+          y: Math.random() * (gameSize.height - 100 * gameSize.scale) + 50 * gameSize.scale,
           sprite: getRandomObstacleSprite()
         })
       }
 
       const drawBackground = () => {
         ctx.fillStyle = COLORS.sky
-        ctx.fillRect(0, 0, GAME_CONSTANTS.CANVAS_WIDTH, GAME_CONSTANTS.CANVAS_HEIGHT)
+        ctx.fillRect(0, 0, gameSize.width, gameSize.height)
       }
 
       const drawPlayer = () => {
         const { player } = gameStateRef.current
+        const constants = getDynamicConstants()
+        
         if (player.sprite) {
           ctx.save()
           ctx.translate(player.x, player.y)
@@ -278,30 +349,32 @@ function SnowBored() {
           
           ctx.drawImage(
             player.sprite,
-            -GAME_CONSTANTS.PLAYER_WIDTH / 2,
-            -GAME_CONSTANTS.PLAYER_HEIGHT / 2,
-            GAME_CONSTANTS.PLAYER_WIDTH,
-            GAME_CONSTANTS.PLAYER_HEIGHT
+            -constants.PLAYER_WIDTH / 2,
+            -constants.PLAYER_HEIGHT / 2,
+            constants.PLAYER_WIDTH,
+            constants.PLAYER_HEIGHT
           )
           ctx.restore()
         }
       }
 
       const drawObstacles = () => {
+        const constants = getDynamicConstants()
+        
         gameStateRef.current.obstacles.forEach(obstacle => {
           ctx.drawImage(
             obstacle.sprite,
-            obstacle.x - GAME_CONSTANTS.OBSTACLE_WIDTH / 2,
-            obstacle.y - GAME_CONSTANTS.OBSTACLE_HEIGHT,
-            GAME_CONSTANTS.OBSTACLE_WIDTH,
-            GAME_CONSTANTS.OBSTACLE_HEIGHT
+            obstacle.x - constants.OBSTACLE_WIDTH / 2,
+            obstacle.y - constants.OBSTACLE_HEIGHT,
+            constants.OBSTACLE_WIDTH,
+            constants.OBSTACLE_HEIGHT
           )
         })
       }
 
       const drawSkiTrail = () => {
         ctx.strokeStyle = COLORS.skiTrail
-        ctx.lineWidth = 2
+        ctx.lineWidth = 2 * gameSize.scale // 根据缩放调整线宽
         ctx.beginPath()
         gameStateRef.current.trailPoints.forEach((point, index) => {
           if (index === 0) {
@@ -314,26 +387,29 @@ function SnowBored() {
       }
 
       const drawUI = () => {
+        const fontSize = Math.floor(16 * gameSize.scale)
         ctx.fillStyle = '#000000'
-        ctx.font = '16px "Press Start 2P"'
+        ctx.font = `${fontSize}px "Press Start 2P"`
         
         const scoreText = `Score: ${gameStateRef.current.score}`
         const scoreWidth = ctx.measureText(scoreText).width
-        ctx.fillText(scoreText, GAME_CONSTANTS.CANVAS_WIDTH - scoreWidth - 20, 30)
+        ctx.fillText(scoreText, gameSize.width - scoreWidth - 20 * gameSize.scale, 30 * gameSize.scale)
         
         const currentTime = gameStateRef.current.isGameOver 
           ? gameTime 
           : Math.floor((Date.now() - gameStateRef.current.startTime) / 1000)
         const timeString = new Date(currentTime * 1000).toISOString().substr(14, 5)
-        ctx.fillText(timeString, 20, 30)
+        ctx.fillText(timeString, 20 * gameSize.scale, 30 * gameSize.scale)
       }
 
       const checkCollision = () => {
         const { player, obstacles } = gameStateRef.current
+        const constants = getDynamicConstants()
+        
         for (let obstacle of obstacles) {
           const dx = Math.abs(player.x - obstacle.x)
           const dy = Math.abs(player.y - obstacle.y)
-          if (dx < GAME_CONSTANTS.PLAYER_WIDTH / 2 && dy < GAME_CONSTANTS.PLAYER_HEIGHT / 2) {
+          if (dx < constants.PLAYER_WIDTH / 2 && dy < constants.PLAYER_HEIGHT / 2) {
             return true
           }
         }
@@ -344,47 +420,51 @@ function SnowBored() {
         if (gameStateRef.current.isGameOver) return
 
         const { player, obstacles, trailPoints } = gameStateRef.current
+        const constants = getDynamicConstants()
         const currentTime = Date.now()
         
         if (currentTime - gameStateRef.current.lastSpeedIncreaseTime >= 2500) {
           gameStateRef.current.gameSpeedMultiplier += 0.05
           gameStateRef.current.obstacleGenerationInterval = Math.max(
-            30,
+            30 / gameSize.scale,
             gameStateRef.current.obstacleGenerationInterval - 5
           )
           gameStateRef.current.lastSpeedIncreaseTime = currentTime
         }
 
         if (player.isMovingUp) {
-          player.velocityY = Math.max(player.velocityY - 0.2, -GAME_CONSTANTS.MOVEMENT_SPEED)
+          player.velocityY = Math.max(player.velocityY - 0.2 * gameSize.scale, -constants.MOVEMENT_SPEED)
         } else {
-          player.velocityY = Math.min(player.velocityY + GAME_CONSTANTS.GRAVITY, GAME_CONSTANTS.MOVEMENT_SPEED)
+          player.velocityY = Math.min(player.velocityY + constants.GRAVITY, constants.MOVEMENT_SPEED)
         }
 
         player.y += player.velocityY
 
-        if (player.y < 50) player.y = 50
-        if (player.y > GAME_CONSTANTS.CANVAS_HEIGHT - 70) player.y = GAME_CONSTANTS.CANVAS_HEIGHT - 70
+        const minY = 50 * gameSize.scale
+        const maxY = gameSize.height - 70 * gameSize.scale
+        
+        if (player.y < minY) player.y = minY
+        if (player.y > maxY) player.y = maxY
 
-        trailPoints.unshift({ x: player.x, y: player.y + 10 })
+        trailPoints.unshift({ x: player.x, y: player.y + 10 * gameSize.scale })
         if (trailPoints.length > 50) {
           trailPoints.pop()
         }
 
         gameStateRef.current.obstacles = obstacles.map(obstacle => ({
           ...obstacle,
-          x: obstacle.x - GAME_CONSTANTS.MOVEMENT_SPEED * gameStateRef.current.gameSpeedMultiplier
-        })).filter(obstacle => obstacle.x > -50)
+          x: obstacle.x - constants.MOVEMENT_SPEED * gameStateRef.current.gameSpeedMultiplier
+        })).filter(obstacle => obstacle.x > -50 * gameSize.scale)
 
         gameStateRef.current.trailPoints = trailPoints.map(point => ({
           ...point,
-          x: point.x - GAME_CONSTANTS.MOVEMENT_SPEED * gameStateRef.current.gameSpeedMultiplier
+          x: point.x - constants.MOVEMENT_SPEED * gameStateRef.current.gameSpeedMultiplier
         })).filter(point => point.x > 0)
 
         if (gameStateRef.current.frameCount % gameStateRef.current.obstacleGenerationInterval === 0) {
           gameStateRef.current.obstacles.push({
-            x: GAME_CONSTANTS.CANVAS_WIDTH + 50,
-            y: Math.random() * (GAME_CONSTANTS.CANVAS_HEIGHT - 100) + 50,
+            x: gameSize.width + 50 * gameSize.scale,
+            y: Math.random() * (gameSize.height - 100 * gameSize.scale) + 50 * gameSize.scale,
             sprite: spritesRef.current?.getRandomObstacleSprite() || gameStateRef.current.obstacles[0]?.sprite
           })
         }
@@ -404,7 +484,7 @@ function SnowBored() {
       }
 
       const gameLoop = () => {
-        ctx.clearRect(0, 0, GAME_CONSTANTS.CANVAS_WIDTH, GAME_CONSTANTS.CANVAS_HEIGHT)
+        ctx.clearRect(0, 0, gameSize.width, gameSize.height)
         
         drawBackground()
         drawSkiTrail()
@@ -429,11 +509,11 @@ function SnowBored() {
       // 清理函数，取消动画帧请求
       // 这里我们应该存储animationFrameId并在清理时取消
     }
-  }, []) // 移除依赖项，只在组件挂载时初始化一次
+  }, [gameSize]) // 移除依赖项，只在组件挂载时初始化一次
 
   return (
     <div 
-      className="flex flex-col items-center justify-center min-h-screen p-4"
+      className="flex flex-col items-center justify-center min-h-screen p-2 md:p-4"
       style={{
         backgroundImage: 'url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Ice-RFivzrFYklghXcbtYkoYiMiESh5rh5.png")',
         backgroundRepeat: 'repeat'
@@ -445,29 +525,43 @@ function SnowBored() {
         onClose={handleCloseWelcomeModal} 
       />
       
-      <h1 className={`text-4xl font-bold mb-4 ${gameOver ? 'text-red-500' : 'text-white'}`} style={{ fontFamily: '"Press Start 2P", cursive' }}>
+      <h1 
+        className={`text-xl md:text-4xl font-bold mb-2 md:mb-4 text-center ${gameOver ? 'text-red-500' : 'text-white'}`} 
+        style={{ 
+          fontFamily: '"Press Start 2P", cursive',
+          fontSize: `${Math.max(16, 24 * gameSize.scale)}px`
+        }}
+      >
         {gameOver ? "It's Snow Over" : "We're Snow Back"}
       </h1>
+      
       <div className="relative">
         <canvas
           ref={canvasRef}
-          width={GAME_CONSTANTS.CANVAS_WIDTH}
-          height={GAME_CONSTANTS.CANVAS_HEIGHT}
-          className="border-4 border-gray-700 rounded-lg cursor-pointer select-none"
+          width={gameSize.width}
+          height={gameSize.height}
+          className="border-2 md:border-4 border-gray-700 rounded-lg cursor-pointer select-none shadow-lg"
           onMouseDown={handlePointerDown}
           onMouseUp={handlePointerUp}
           onMouseLeave={handlePointerLeave}
           onTouchStart={handlePointerDown}
           onTouchEnd={handlePointerUp}
-          style={{ touchAction: 'none' }} // 防止移动端滚动
+          style={{ 
+            touchAction: 'none',
+            maxWidth: '100vw',
+            maxHeight: '50vh'
+          }}
         />
         {gameOver && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/75">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/75 rounded-lg">
             <div className="text-white text-center">
               <button
                 onClick={restartGame}
-                className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 font-pixel"
-                style={{ fontFamily: '"Press Start 2P", cursive' }}
+                className="px-3 md:px-4 py-2 bg-black text-white rounded hover:bg-gray-800 font-pixel transition-colors"
+                style={{ 
+                  fontFamily: '"Press Start 2P", cursive',
+                  fontSize: `${Math.max(12, 16 * gameSize.scale)}px`
+                }}
               >
                 Play Again
               </button>
@@ -475,11 +569,27 @@ function SnowBored() {
           </div>
         )}
       </div>
-      <p className="text-white mt-4 text-center">
+      
+      <p 
+        className="text-white mt-2 md:mt-4 text-center px-4"
+        style={{ fontSize: `${Math.max(12, 14 * gameSize.scale)}px` }}
+      >
         点击并按住游戏区域向上飞行
         <br />
-        <span className="text-sm opacity-75">支持触摸操作</span>
+        <span className="text-xs md:text-sm opacity-75">支持触摸操作</span>
       </p>
+      
+      {/* 游戏信息显示 */}
+      <div className="mt-2 text-white text-center flex gap-4 md:gap-8">
+        <div style={{ fontSize: `${Math.max(10, 12 * gameSize.scale)}px` }}>
+          分数: {score}
+        </div>
+        {gameOver && (
+          <div style={{ fontSize: `${Math.max(10, 12 * gameSize.scale)}px` }}>
+            时间: {gameTime}s
+          </div>
+        )}
+      </div>
     </div>
   )
 }
